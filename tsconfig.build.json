@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "files": [],
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "references": [{
+    "path": "./packages/schema-tools/tsconfig.build.json"
+  }, {
+    "path": "./packages/schema2md/tsconfig.build.json"
+  }]
+}

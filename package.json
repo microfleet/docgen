@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "name": "microfleet_docs",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "prebootstrap": "yarn --frozen-lockfile --check-files",
+    "bootstrap": "lerna bootstrap -- --frozen-lockfile --check-files",
+    "lint": "lerna run lint --parallel",
+    "pretest": "yarn lint && yarn compile",
+    "test": "lerna run test --stream",
+    "precompile": "yarn clean",
+    "compile": "tsc -b ./tsconfig.build.json",
+    "clean": "rimraf packages/*/lib packages/*/*.tsbuildinfo",
+    "semantic-release": "yarn compile && lerna publish --conventional-commits --create-release=github --yes"
+  },
+  "devDependencies": {
+    "@makeomatic/deploy": "^10.3.0",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.1",
+    "eslint": "^7.7.0",
+    "eslint-config-makeomatic": "^5.0.2",
+    "lerna": "^3.22.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "prepare-commit-msg": "./node_modules/@makeomatic/deploy/git-hooks/prepare-commit-msg $HUSKY_GIT_PARAMS"
+    }
+  }
+}
