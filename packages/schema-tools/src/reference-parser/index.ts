@@ -23,7 +23,6 @@ type SchemaInfo = {
 }
 
 type ReferenceInfo = {
-  self: boolean;
   schema: SchemaInfo;
   ref: SchemaNode;
 }
@@ -40,6 +39,13 @@ export type ResolvedReference = {
 
 export type ResolvedSchema  = SchemaNode & {
   $xRef?: ResolvedReference
+}
+
+type ParsedRef = {
+  ptr: JsonPointer
+  parsed: url.UrlWithStringQuery
+  isLocal: boolean
+  refId: string | null
 }
 
 export class RefParser {
@@ -96,12 +102,17 @@ export class RefParser {
     deasync(syncRun)()
   }
 
-  private parseRef(schema: SchemaNode, ref: string) {
+  private parseRef(schema: SchemaNode, ref: string): ParsedRef {
     const parsed = url.parse(ref)
     const { path: parsedPath, hash } = parsed
-    const ptr = !hash || hash.length < 2 ? '' : hash.replace(/^#/, '')
+    const ptr = JsonPointer.create(!hash || hash.length < 2 ? '' : hash.replace(/^#/, ''))
+    const baseName = parsedPath ? path.basename(parsedPath, '.json') : null
 
-    return { isLocal: schema.$id === parsedPath || parsedPath === null, id: parsedPath, ptr }
+    return {
+      ptr, parsed,
+      isLocal: schema.$id === baseName || parsedPath === null,
+      refId: baseName
+    }
   }
 
   public resolveSchema(schema: SchemaNode, localOnly = false): ResolvedSchema {
@@ -110,16 +121,20 @@ export class RefParser {
     const cb = (params: WalkParams) => {
       const { node, root } = params
       if (node.$ref) {
-        const { isLocal } = this.parseRef(root, node.$ref)
+        const parsedReference = this.parseRef(root, node.$ref)
+        const { isLocal, ptr } = parsedReference
+
         if (localOnly && !isLocal) return
 
         if (isLocal) {
-          const ref = this.asLocalRef(root, node.$ref)
+          // const ref = this.asLocalRef(root, node.$ref)
+          const ref = ptr.get(root) as ResolvedSchema
           const { $id: _, ...rest } = ref
           const $xRef = {
             local: true,
             hash: node.$ref.replace(/(.+)#/, '#') || '#/',
-            originalRef: node.$ref
+            originalRef: node.$ref,
+            id: root.$id
           }
 
           assign(node, this.deep ? { $xRef, ...rest } : { $xRef })
@@ -130,13 +145,11 @@ export class RefParser {
         let refInfo: ReferenceInfo
 
         try {
-          refInfo = this.findRef(root, node.$ref)
+          refInfo = this.findRemoteRef(parsedReference)
         } catch (e) {
-          // consolse.error('noref', node.$ref, { localOnly, root, refSchema }
           if (!localOnly) throw e
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const refSchemaInfo = refInfo!.schema
 
         if (! refSchemaInfo.parsed) {
@@ -145,7 +158,8 @@ export class RefParser {
         }
 
         const parsedRefSchema = refSchemaInfo.schema
-        const { $id: _, ...localRef } = this.asLocalRef(parsedRefSchema, node.$ref)
+        // const { $id: _, ...localRef } = this.asLocalRef(parsedRefSchema, node.$ref)
+        const { $id: _, ...localRef } = ptr.get(parsedRefSchema) as ResolvedSchema
 
         const $xRef = {
           local: false,
@@ -157,8 +171,6 @@ export class RefParser {
           id: parsedRefSchema.$id,
         }
 
-        // eslint-disable-next-line no-console
-        console.debug('this.deep', { deep: this.deep })
         assign(node, this.deep ? { $xRef, ...localRef } : { $xRef })
       }
     }
@@ -168,27 +180,21 @@ export class RefParser {
     return resultSchema
   }
 
-  private findRef(schema: SchemaNode, ref: string): ReferenceInfo {
-    const parsed = url.parse(ref)
-    const { path: parsedPath, hash } = parsed
-    const ptr = !hash || hash.length < 2 ? '' : hash.replace(/^#/, '')
-    const targetSchema = parsedPath != null ? this.schemas[parsedPath].schema : schema
+  private findRemoteRef(ref: ParsedRef): ReferenceInfo {
+    const targetSchema = this.schemas[ref.refId!]
 
-    if (!parsedPath) throw new Error(`unable to resolve reference ${ref}`)
-
-    const refPointer = JsonPointer.create(ptr)
-    return {
-      ref: refPointer.get(targetSchema) as SchemaNode,
-      schema: this.schemas[parsedPath],
-      self: parsedPath == null
+    if (!targetSchema) {
+      console.debug(Object.keys(this.schemas))
+      const e = new Error(`unable to resolve reference ${ref}`)
+      // @ts-ignore
+      e.refInfo = ref
+      throw e
     }
-  }
 
-  private asLocalRef(schema: SchemaNode, ref: string): SchemaNode {
-    const parsed = url.parse(ref)
-    const { hash } = parsed
-    const ptr = !hash || hash.length < 2 ? '' : hash.replace(/^#/, '')
-    const refPointer = JsonPointer.create(ptr)
-    return refPointer.get(schema) as SchemaNode
+    const referenced = ref.ptr.get(targetSchema.schema) as SchemaNode
+    return {
+      ref: referenced,
+      schema: targetSchema,
+    }
   }
 }
