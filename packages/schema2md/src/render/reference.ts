@@ -1,7 +1,8 @@
 import { DataObject } from "json2md"
 import { SchemaRef } from "@microfleet/schema-tools"
 
-import { Renderer, getLink } from './util'
+import { getLink } from './util'
+import { Renderer } from './renderer'
 
 export function renderRef(node: SchemaRef, _: number): DataObject[] | string[] {
   const result = []

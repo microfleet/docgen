@@ -1,5 +1,7 @@
 import { DataObject } from 'json2md'
-import { SchemaNode, SchemaRef, TREE_NODE_TYPES } from '@microfleet/schema-tools'
+import { SchemaNode, SchemaRef } from '@microfleet/schema-tools'
+
+import { Renderer } from './renderer'
 
 export function getHeaderLevel(current: number, level: number, node: SchemaNode): string {
   const finalLevel = current + node.deep + level
@@ -13,7 +15,8 @@ export function isProperty(node: SchemaNode): boolean {
 
 export function getLink(referenceNode: SchemaRef): string {
   const { id, hash } = referenceNode.ref
-  return `${id}${hash}`
+  const href = `${id || ''}${hash}`.replace(/#/g, '--')
+  return `#${href}`
 }
 
 export function getGenericInfo(node: SchemaNode, _: number): (DataObject | string)[] {
@@ -25,7 +28,8 @@ export function getGenericInfo(node: SchemaNode, _: number): (DataObject | strin
   let link = ''
 
   if (node.params.isDefinition || isProperty(node)) {
-    link = `<a name="${node.params.rootId || ''}#${path.toString()}"/>`
+    const href = `${node.params.rootId || ''}#${path.toString()}`.replace(/#/g, '--')
+    link = `<a name="${href}"/>`
   }
 
   result.push(`\`{${node.dataType}}\` ${link}`)
@@ -40,16 +44,27 @@ export function getGenericInfo(node: SchemaNode, _: number): (DataObject | strin
   return result
 }
 
-type RenderFn = (node: any, level: number) => DataObject[] | string[] | (DataObject|string)[]
+export function renderProps(props: Record<string, SchemaNode> | undefined, level: number): DataObject {
+  const ul = Object.entries(props ?? {}).map(( [name , prop] ) => {
+    return [
+      `**${name}**`,
+      ...Renderer.render(prop, level + 1)
+    ]
+  })
+  // @todo consistent types
+  return { ul: ul as unknown as string[] } // dirty hack
+}
 
-export class Renderer {
-  static renderers: Map<typeof TREE_NODE_TYPES[number], RenderFn> = new Map()
-  static register(name: typeof TREE_NODE_TYPES[number], fn: RenderFn): void {
-    Renderer.renderers.set(name, fn)
-  }
-  static render(node: SchemaNode, level: number): DataObject[] | string[] | (DataObject|string)[] {
-    const render = Renderer.renderers.get(node.type)
-    if (render) return render(node, level)
-    throw new Error(`rederer for '${node.type}' not registered`)
+export function renderDefinitions(node: SchemaNode, level: number): DataObject {
+  const definitions = node.definitions ?? {}
+  const ul = Object.entries(definitions).map(( [,prop] ) => {
+    return [
+      `**${node.data.$id || ''}#${prop.path.toString()}**`,
+      ...Renderer.render(prop, level + 2)
+    ]
+  })
+  return {
+    // @todo consistent types
+    ul: ul as unknown as string[] // dirty hack
   }
 }

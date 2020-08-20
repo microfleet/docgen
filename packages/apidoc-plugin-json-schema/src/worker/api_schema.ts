@@ -2,11 +2,11 @@ import { Application, Worker } from 'apidoc'
 import * as json2md from 'json2md'
 
 import { SchemaNode, SchemaInfo, } from '@microfleet/schema-tools'
-import { RenderMd } from '@microfleet/schema2md'
+import { Render } from '@microfleet/schema2md'
 
 import { ParseResult } from '../parser/api_schema'
 
-const { Renderer } = RenderMd
+const { Renderer } = Render
 
 type ReferenceIndex = {
   [key: string] : {

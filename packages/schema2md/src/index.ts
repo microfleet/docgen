@@ -1,1 +1,1 @@
-export * as RenderMd from './render/md'
+export * as Render from './render'

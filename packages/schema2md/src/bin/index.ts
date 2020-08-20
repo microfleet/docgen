@@ -5,7 +5,7 @@ import * as util from 'util'
 
 import { RefParser, SchemaNode } from '@microfleet/schema-tools'
 
-import { Renderer } from '../render/md'
+import { Renderer } from '../render'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const inspect = (obj: any) => util.inspect(obj, { depth: null, colors: true });
