@@ -19,11 +19,14 @@ module.exports = {
 
     refParser.findSchemasSync()
 
+    // extend app
     app.mft = {
       refParser,
       config,
     }
+
     parser.parse = parser.parse.bind(app)
+
     app.parsers.apischema = parser
     app.workers.apischema = refSchemaWorker(app)
 	}

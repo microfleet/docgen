@@ -25,9 +25,6 @@ declare module 'apidoc' {
     workers: {
       [key: string]: Worker
     }
-    filters: {
-      [key: string]: any
-    }
     mft: {
       refParser: RefParser
       config: {
