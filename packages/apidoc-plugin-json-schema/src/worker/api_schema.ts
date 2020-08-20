@@ -102,7 +102,7 @@ function createReferencedSchemaBlocks(parsedFiles: any[], filenames: string[], p
           url: parsed.data.$id,
           title: parsed.data.title || parsed.data.$id,
           name: parsed.data.$id,
-          group: 'SchemaDefinitions',
+          group: 'zSchemaDefinitions',
           groupTitle: 'Definitions',
           description: parsed.data.description,
           filename: schema.path,
