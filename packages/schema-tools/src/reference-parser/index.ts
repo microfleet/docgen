@@ -158,7 +158,6 @@ export class RefParser {
         }
 
         const parsedRefSchema = refSchemaInfo.schema
-        // const { $id: _, ...localRef } = this.asLocalRef(parsedRefSchema, node.$ref)
         const { $id: _, ...localRef } = ptr.get(parsedRefSchema) as ResolvedSchema
 
         const $xRef = {

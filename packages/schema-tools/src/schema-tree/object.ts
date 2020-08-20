@@ -12,9 +12,6 @@ export class SchemaObject extends SchemaNode {
 
     super(rest, params)
 
-    // this.properties = {}
-    // this.additionalProperties = {}
-    // this.patternProperties = {}
     this.type = 'x-object'
 
     this.properties = this.parseProperties(properties, 'properties', { isProperty: true })
@@ -28,7 +25,7 @@ export class SchemaObject extends SchemaNode {
       } else {
         this.additionalProperties = this.parseProperties(additionalProperties, 'additionalProperties', { isAdditionalProperty: true })
       }
-      this.haveAdditionalProperties = Object.keys(this.additionalProperties).length > 0 && Object.keys(this.patternProperties).length > 0
+      this.haveAdditionalProperties = Object.keys(this.additionalProperties ?? {}).length > 0 && Object.keys(this.patternProperties ?? {}).length > 0
     }
 
   }

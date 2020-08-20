@@ -98,20 +98,20 @@ export class SchemaNode {
     }
   }
 
-  protected parseProperties(props: Record<string, ResolvedSchema>, extraPath: string, params: Partial<Params>): Properties {
+  protected parseProperties(props: Record<string, ResolvedSchema>, extraPath: string, params: Partial<Params>): Properties | undefined {
     const propsObject: Properties = {}
 
-    if (props) {
-      for (const [key, prop] of Object.entries(props)) {
-        const { constraints } = this
-        const isRequired = constraints.required ? constraints.required.includes(prop) : false
-        const path = this.path.concat(`/${extraPath}`).concat(`/${key}`)
+    if (!props) return
 
-        if (OF_CONDITION_KEYS.includes(key)) {
-          propsObject[key] = this.parseNode({ [key]: prop }, {...params, isRequired, path })
-        } else {
-          propsObject[key] = this.parseNode(prop, { ...params, isRequired, path })
-        }
+    for (const [key, prop] of Object.entries(props)) {
+      const { constraints } = this
+      const isRequired = constraints.required ? constraints.required.includes(prop) : false
+      const path = this.path.concat(`/${extraPath}`).concat(`/${key}`)
+
+      if (OF_CONDITION_KEYS.includes(key)) {
+        propsObject[key] = this.parseNode({ [key]: prop }, {...params, isRequired, path })
+      } else {
+        propsObject[key] = this.parseNode(prop, { ...params, isRequired, path })
       }
     }
 
