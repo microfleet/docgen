@@ -17,9 +17,9 @@ export class SchemaConditionalIf extends SchemaNode {
     this.if = this.parseNode(node.if, { })
 
     if (!node.then) throw new Error('Should have then condition')
-    this.then = this.then = this.parseNode(node.then, { deep: this.deep + 1, path: this.path.concat('/then') })
+    this.then = this.then = this.parseNode(node.then, { path: this.path.concat('/then') })
 
-    if (node.else) this.else = this.parseNode(node.else, { deep: this.deep + 1, path: this.path.concat('/else') })
+    if (node.else) this.else = this.parseNode(node.else, { path: this.path.concat('/else') })
   }
 
   toJSON(): any {
@@ -51,10 +51,7 @@ export class SchemaConditionalOf extends SchemaNode {
     this.possibles = node[condition]
       .map((cond: ResolvedSchema, index: number) => {
         const subPath = this.path.concat(`/${condition}/${index}`)
-        return this.parseNode(cond, {
-          deep: this.deep + 1,
-          path: subPath
-        })
+        return this.parseNode(cond, { path: subPath })
       })
   }
 

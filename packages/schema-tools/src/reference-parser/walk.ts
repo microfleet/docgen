@@ -1,6 +1,6 @@
 import { JsonPointer } from 'json-ptr'
 
-export type SchemaNode = {
+export type JsonSchema = {
   [key: string]: any
 }
 
@@ -9,12 +9,12 @@ type ExtraParams = {
 }
 
 export type WalkParams = {
-  node: SchemaNode,
+  node: JsonSchema,
   ptr: JsonPointer,
-  root: SchemaNode,
+  root: JsonSchema,
   extra?: ExtraParams,
   key?: string | number,
-  parent?: SchemaNode,
+  parent?: JsonSchema,
 }
 
 type WalkCb = {
@@ -53,7 +53,7 @@ function walkObject(args: WalkParams, cb: WalkCb) {
   }
 }
 
-export function walk(obj: SchemaNode, cb?: WalkCb, extra?: ExtraParams, ptr = ''): void {
+export function walk(obj: JsonSchema, cb?: WalkCb, extra?: ExtraParams, ptr = ''): void {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const callbacks = { ...{ pre: () => {}, post: () => {} }, ...cb }
   const params = {

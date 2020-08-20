@@ -6,7 +6,7 @@ import { assign, cloneDeep } from 'lodash'
 import { JsonPointer } from 'json-ptr'
 import * as deasync from 'deasync'
 
-import { walk, SchemaNode, WalkParams } from './walk'
+import { walk, JsonSchema, WalkParams } from './walk'
 
 type RefParserOpts = {
   schemaDirs: string[] | string,
@@ -14,8 +14,8 @@ type RefParserOpts = {
   deep?: boolean
 }
 
-type SchemaInfo = {
-  schema: SchemaNode,
+export type SchemaInfo = {
+  schema: JsonSchema,
   path: string,
   base: string,
   resolved: boolean,
@@ -24,7 +24,7 @@ type SchemaInfo = {
 
 type ReferenceInfo = {
   schema: SchemaInfo;
-  ref: SchemaNode;
+  ref: JsonSchema;
 }
 
 export type ResolvedReference = {
@@ -37,7 +37,7 @@ export type ResolvedReference = {
   id: string,
 }
 
-export type ResolvedSchema  = SchemaNode & {
+export type ResolvedSchema  = JsonSchema & {
   $xRef?: ResolvedReference
 }
 
@@ -102,7 +102,7 @@ export class RefParser {
     deasync(syncRun)()
   }
 
-  private parseRef(schema: SchemaNode, ref: string): ParsedRef {
+  private parseRef(schema: JsonSchema, ref: string): ParsedRef {
     const parsed = url.parse(ref)
     const { path: parsedPath, hash } = parsed
     const ptr = JsonPointer.create(!hash || hash.length < 2 ? '' : hash.replace(/^#/, ''))
@@ -115,7 +115,7 @@ export class RefParser {
     }
   }
 
-  public resolveSchema(schema: SchemaNode, localOnly = false): ResolvedSchema {
+  public resolveSchema(schema: JsonSchema, localOnly = false): ResolvedSchema {
     const resultSchema = cloneDeep(schema)
 
     const cb = (params: WalkParams) => {
@@ -183,15 +183,9 @@ export class RefParser {
   private findRemoteRef(ref: ParsedRef): ReferenceInfo {
     const targetSchema = this.schemas[ref.refId!]
 
-    if (!targetSchema) {
-      console.debug(Object.keys(this.schemas))
-      const e = new Error(`unable to resolve reference ${ref}`)
-      // @ts-ignore
-      e.refInfo = ref
-      throw e
-    }
+    if (!targetSchema) throw new Error(`unable to resolve reference '${ref.refId}#${ref.ptr}'`)
 
-    const referenced = ref.ptr.get(targetSchema.schema) as SchemaNode
+    const referenced = ref.ptr.get(targetSchema.schema) as JsonSchema
     return {
       ref: referenced,
       schema: targetSchema,

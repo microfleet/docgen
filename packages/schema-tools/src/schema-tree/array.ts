@@ -11,8 +11,7 @@ export class SchemaArray extends SchemaNode {
     this.items = []
     this.type = 'x-array'
     this.variable = !node.items.type && !node.items.$xRef
-
-    this.items = this.parseNode(node.items, { path: this.path.concat(`/items`), deep: this.deep + 1 })
+    this.items = this.parseNode(node.items, { path: this.path.concat(`/items`) })
   }
 
   toJSON(): any {

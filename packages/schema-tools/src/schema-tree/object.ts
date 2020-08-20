@@ -2,9 +2,9 @@ import { SchemaNode, Params } from './node'
 import { ResolvedSchema } from '../reference-parser'
 
 export class SchemaObject extends SchemaNode {
-  public properties: { [key: string]: SchemaNode }
-  public additionalProperties: { [key: string]: SchemaNode } | SchemaNode
-  public patternProperties: { [key: string]: SchemaNode }
+  public properties?: { [key: string]: SchemaNode }
+  public additionalProperties?: { [key: string]: SchemaNode } | SchemaNode
+  public patternProperties?: { [key: string]: SchemaNode }
   public haveAdditionalProperties: boolean
 
   constructor(node: ResolvedSchema, params: Partial<Params>) {
@@ -12,9 +12,9 @@ export class SchemaObject extends SchemaNode {
 
     super(rest, params)
 
-    this.properties = {}
-    this.additionalProperties = {}
-    this.patternProperties = {}
+    // this.properties = {}
+    // this.additionalProperties = {}
+    // this.patternProperties = {}
     this.type = 'x-object'
 
     this.properties = this.parseProperties(properties, 'properties', { isProperty: true })
@@ -23,8 +23,7 @@ export class SchemaObject extends SchemaNode {
     if (typeof additionalProperties === 'boolean') {
       this.haveAdditionalProperties = additionalProperties
     } else {
-
-      if (this.additionalProperties.type) {
+      if (typeof additionalProperties === 'object' && (additionalProperties.type || additionalProperties.$ref)) {
         this.additionalProperties = this.parseNode(additionalProperties, { isAdditionalProperty: true })
       } else {
         this.additionalProperties = this.parseProperties(additionalProperties, 'additionalProperties', { isAdditionalProperty: true })

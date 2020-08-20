@@ -62,16 +62,12 @@ export class SchemaNode {
   public parent?: SchemaNode
 
   public ifCondition: any; // #TODO
-  public definitions: { [key: string]: SchemaNode } = {}
+  public definitions?: { [key: string]: SchemaNode }
 
   static parsers = new Set<Parser>()
 
   constructor(node: ResolvedSchema, params?: Partial<Params>) {
     const defaults = {
-      isProperty: false,
-      isAdditionalProperty: false,
-      isPatternProperty: false,
-      isDefinition: false,
       path: emptyPath,
       parentPath: emptyPath,
       deep: 0,
@@ -91,11 +87,14 @@ export class SchemaNode {
 
     const conditionals = pick(rest, IF_CONDITION_KEYS)
     if (Object.keys(conditionals).length > 0) {
-      this.ifCondition = this.parseNode(conditionals, { isCondition: true, deep: this.deep + 1, path: this.path.concat('/if') })
+      this.ifCondition = this.parseNode(conditionals, {
+        isCondition: true,
+        path: this.path.concat('/if')
+      })
     }
 
     if (rest.definitions) {
-      this.definitions = this.parseProperties(rest.definitions, 'definitions', { isDefinition: true, rootId: node.$id })
+      this.definitions = this.parseProperties(rest.definitions, 'definitions', { isDefinition: true })
     }
   }
 
@@ -109,9 +108,9 @@ export class SchemaNode {
         const path = this.path.concat(`/${extraPath}`).concat(`/${key}`)
 
         if (OF_CONDITION_KEYS.includes(key)) {
-          propsObject[key] = this.parseNode({ [key]: prop }, { ...params, isRequired, path, deep: this.deep + 1 })
+          propsObject[key] = this.parseNode({ [key]: prop }, {...params, isRequired, path })
         } else {
-          propsObject[key] = this.parseNode(prop, { ...params, isRequired, path, deep: this.deep + 1 })
+          propsObject[key] = this.parseNode(prop, { ...params, isRequired, path })
         }
       }
     }
@@ -135,14 +134,13 @@ export class SchemaNode {
   protected parseNode(node: ResolvedSchema, params?: Partial<Params>): SchemaNode {
     const parser = [...SchemaNode.parsers.values()].find(({ fn }) => fn(node))
     const c = parser ? parser.cl : SchemaNode
-    if (node.$id === 'common') {
-      console.debug('node', parser)
-    }
+
     const newNode = new c(node, {
       ...this.params,
       ...params,
       parent: this,
       parentPath: this.path,
+      deep: this.deep + 1
     })
 
     this.addNode(newNode)
@@ -176,6 +174,6 @@ export class SchemaNode {
   }
 
   static parse = (schema: ResolvedSchema): SchemaNode => {
-    return (new SchemaNode({}, {})).parseNode(schema)
+    return (new SchemaNode({}, {})).parseNode(schema, { rootId: schema.$id, deep: -1 })
   }
 }

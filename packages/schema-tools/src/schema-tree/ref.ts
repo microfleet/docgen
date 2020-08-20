@@ -9,7 +9,9 @@ export class SchemaRef extends SchemaNode {
     super(omit(node, ['$ref', '$xRef']), params)
     this.type = 'x-ref'
     this.dataType = 'reference'
+
     if (!node.$xRef) throw new Error('no reference set')
+
     this.ref = node.$xRef
   }
 
@@ -19,7 +21,6 @@ export class SchemaRef extends SchemaNode {
       reference: this.ref
     }
   }
-
 
   static isRef = (node: ResolvedSchema): boolean => { return node.$xRef ? true : false }
 }
