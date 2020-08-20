@@ -28,6 +28,10 @@ function parse(this: Application, content: string, _: string): ParseResult | und
     const resolved = this.mft.refParser.resolveSchema(schema?.schema)
     const schemaType = (type || 'apiRequest').replace(/^api/, '').toLowerCase()
 
+    if (!['request', 'response'].includes(schemaType)) {
+      throw new Error(`only {apiRequest|apiResponse} allowed`)
+    }
+
     elementPath = `local.schemas.${schemaType}`
 
     const result = {

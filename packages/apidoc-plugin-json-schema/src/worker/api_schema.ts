@@ -45,6 +45,8 @@ function prepareSchemas(this: Application, parsedFiles: any[], _: string[], __: 
 
           // render markdown from rendered schema
           block.local.schemas[key] = json2md(rendered)
+          if (!block.local.parsedSchemas) block.local.parsedSchemas = {}
+          block.local.parsedSchemas[key] = parsed
 
           // build referenced schemas index and prepare them
           parsed
@@ -104,7 +106,8 @@ function createReferencedSchemaBlocks(parsedFiles: any[], filenames: string[], p
           groupTitle: 'Definitions',
           description: parsed.data.description,
           filename: schema.path,
-          schema: json2md(rendered)
+          schema: json2md(rendered),
+          parsedSchema: schema,
         }
 
         parsedFiles.push([{ global: {}, local: schemaObj, index: 1 }])
