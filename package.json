@@ -13,7 +13,8 @@
     "precompile": "yarn clean",
     "compile": "tsc -b ./tsconfig.build.json",
     "clean": "rimraf packages/*/lib packages/*/*.tsbuildinfo",
-    "semantic-release": "yarn compile && lerna publish --conventional-commits --create-release=github --yes"
+    "semantic-release": "yarn compile && lerna publish --conventional-commits --create-release=github --yes",
+    "dev": "lerna exec nodemon --stream -- -w ./src/ -x yarn compile -e ts"
   },
   "devDependencies": {
     "@makeomatic/deploy": "^10.3.0",
@@ -22,6 +23,7 @@
     "eslint": "^7.7.0",
     "eslint-config-makeomatic": "^5.0.2",
     "lerna": "^3.22.1",
+    "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
