@@ -4,16 +4,16 @@ import { TREE_NODE_TYPES, SchemaNode } from '@microfleet/schema-tools'
 
 type RenderFn = (node: any, level: number) => (json2md.DataObject|string)[]
 
-json2md.converters.text = (input, json2md) => {
+json2md.converters.br = (input, json2md) => {
   const result: string[] = []
 
-  if (typeof input === 'string') return input
+  if (typeof input === 'string') return `${input}<br>`
 
   Object.values(input).map((v: any) => {
-    result.push(json2md(v, ''))
+    result.push(json2md(v, ' '))
   })
 
-  return result.join('!')
+  return `${result.join('<br>')}<br>`
 }
 
 export class Renderer {

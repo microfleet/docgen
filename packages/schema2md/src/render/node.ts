@@ -19,7 +19,7 @@ export function renderNode(node: SchemaNode, level: number): (DataObject|string)
   if (node.data.description) result.push(node.data.description )
 
   if (node.definitions) {
-    result.push({ p: "**Definitions**:"})
+    result.push({ br: "**Definitions**:"})
     result.push(renderDefinitions(node, level))
   }
 

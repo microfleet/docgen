@@ -6,7 +6,7 @@ import { Renderer } from './renderer'
 export function renderCondOf(node: SchemaConditionalOf, level: number): (DataObject| string)[] {
   const result: (DataObject | string)[] = []
 
-  result.push(`*Could be ${node.condition}:*`)
+  result.push({ br: `*Could be ${node.condition}:*` })
   result.push(
     {
       ul: node.possibles.map((condition) => Renderer.render(condition, level + 1)) as unknown as string[]

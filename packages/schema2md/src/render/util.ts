@@ -1,5 +1,5 @@
 import { DataObject } from 'json2md'
-import { SchemaNode, SchemaRef } from '@microfleet/schema-tools'
+import { SchemaNode, SchemaRef, SchemaObject } from '@microfleet/schema-tools'
 
 import { Renderer } from './renderer'
 
@@ -32,11 +32,15 @@ export function getGenericInfo(node: SchemaNode, _: number): (string|DataObject)
     link = `<a name="${href}"/>`
   }
 
-  result.push(`\`{${node.dataType}}\` ${link}`)
+  result.push({br: `\`{${node.dataType}}\` ${link}`})
+
+  if (node.type === 'x-object' ) {
+    result.push({ br: `Additional properties allowed: \`${(node as SchemaObject).haveAdditionalProperties}\``})
+  }
 
   if (Object.keys(node.constraints).length > 0) {
     const asStrings = Object.entries(node.constraints).map(([key, value]) => `\`${key}\`: \`${value}\``)
-    result.push(`Constraints: ${asStrings.join(', ')}`)
+    result.push({br: `Constraints: ${asStrings.join(', ')}`})
   }
 
   if (description) result.push({ p: description })
@@ -61,6 +65,7 @@ export function renderDefinitions(node: SchemaNode, level: number): DataObject {
     [
       `**${node.data.$id || ''}#${prop.path.toString()}**`,
       ...Renderer.render(prop, level + 2),
+      { br: '' }
     ]
   )
   return {
