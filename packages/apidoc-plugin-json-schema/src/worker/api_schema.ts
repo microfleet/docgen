@@ -3,6 +3,7 @@ import * as json2md from 'json2md'
 
 import { SchemaNode, SchemaInfo, } from '@microfleet/schema-tools'
 import { Render } from '@microfleet/schema2md'
+import * as util from 'util'
 
 import { ParseResult } from '../parser/api_schema'
 
@@ -19,6 +20,36 @@ type ReferenceIndex = {
 type PreparedSchemas = {
   seenSchemas: Set<string>,
   referencedSchemas: ReferenceIndex
+}
+
+function findRefsDeep(app: Application, schema: SchemaNode, preparedSchemas: PreparedSchemas): void {
+  schema
+    .findRefs()
+    .forEach(
+      (reference: any) => {
+        if (reference.ref.local) return
+
+        const schema = Object.values(app.mft.refParser.schemas).find(
+          (schema) => schema.path === reference.ref.path
+        )
+        if (!schema) throw new Error(`no reference schema '${reference.ref.originalRef}'`, )
+
+        const schemaId = schema?.schema.$id
+
+        // process referenced schema
+        if (!preparedSchemas.referencedSchemas[schemaId]) {
+          const resolved = app.mft.refParser.resolveSchema(schema?.schema)
+          const parsed = SchemaNode.parse(resolved)
+          const rendered = Renderer.render(parsed, 0)
+          console.debug('rendered', schemaId, util.inspect(rendered, { depth: null, colors: true }))
+          preparedSchemas.referencedSchemas[schemaId] = { parsed, rendered, schema }
+        }
+
+        // go deep
+        const parsed = preparedSchemas.referencedSchemas[schemaId].parsed
+        findRefsDeep(app, parsed, preparedSchemas)
+      }
+    )
 }
 
 /**
@@ -45,32 +76,12 @@ function prepareSchemas(this: Application, parsedFiles: any[], _: string[], __: 
 
           // render markdown from rendered schema
           block.local.schemas[key] = json2md(rendered)
+
           if (!block.local.parsedSchemas) block.local.parsedSchemas = {}
           block.local.parsedSchemas[key] = parsed
 
           // build referenced schemas index and prepare them
-          parsed
-            .findRefs()
-            .forEach(
-              (reference: any) => {
-                if (reference.ref.local) return
-
-                const schema = Object.values(this.mft.refParser.schemas).find(
-                  (schema) => schema.path === reference.ref.path
-                )
-                if (!schema) throw new Error(`no reference schema '${reference.ref.originalRef}'`, )
-
-                const schemaId = schema?.schema.$id
-
-                // process referenced schema
-                if (!result.referencedSchemas[schemaId]) {
-                  const resolved = this.mft.refParser.resolveSchema(schema?.schema)
-                  const parsed = SchemaNode.parse(resolved)
-                  const rendered = Renderer.render(parsed, 0)
-                  result.referencedSchemas[schemaId] = { parsed, rendered, schema }
-                }
-              }
-            )
+          findRefsDeep(this, parsed, result)
         }
       }
     })

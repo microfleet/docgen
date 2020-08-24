@@ -4,8 +4,8 @@ import { omit } from 'lodash'
 
 export class SchemaRef extends SchemaNode {
   public ref: ResolvedReference
-  constructor(node: ResolvedSchema, params: Partial<Params>) {
 
+  constructor(node: ResolvedSchema, params: Partial<Params>) {
     super(omit(node, ['$ref', '$xRef']), params)
     this.type = 'x-ref'
     this.dataType = 'reference'

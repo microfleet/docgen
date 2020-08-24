@@ -129,7 +129,7 @@ export class RefParser {
         if (isLocal) {
           // const ref = this.asLocalRef(root, node.$ref)
           const ref = ptr.get(root) as ResolvedSchema
-          const { $id: _, ...rest } = ref
+          const { $id: _, $ref: __, ...rest } = ref
           const $xRef = {
             local: true,
             hash: node.$ref.replace(/(.+)#/, '#') || '#/',
@@ -158,7 +158,7 @@ export class RefParser {
         }
 
         const parsedRefSchema = refSchemaInfo.schema
-        const { $id: _, ...localRef } = ptr.get(parsedRefSchema) as ResolvedSchema
+        const { $id: _, $ref: __, ...restRefData } = ptr.get(parsedRefSchema) as ResolvedSchema
 
         const $xRef = {
           local: false,
@@ -169,8 +169,7 @@ export class RefParser {
           originalRef: node.$ref,
           id: parsedRefSchema.$id,
         }
-
-        assign(node, this.deep ? { $xRef, ...localRef } : { $xRef })
+        assign(node, this.deep ? { $xRef, ...restRefData } : { $xRef })
       }
     }
 

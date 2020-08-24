@@ -32,24 +32,14 @@ export function renderObject(node: SchemaObject, level: number): DataObject[] | 
 
   if (node.patternProperties) {
     result.push({ p: "**Pattern properties**:"})
-    result.push({
-      ul: [
-        ...Object.entries(node.patternProperties).map(( [name, prop] ) => {
-          const row = []
-          row.push([
-            `**${name}**`, ...Renderer.render(prop, level + 2)
-          ])
-          return row
-        })
-      ]
-    })
+    result.push(renderProps(node.patternProperties, level + 1))
   }
 
   if (node.definitions) {
     result.push({ p: "**Definitions**:"})
     result.push(renderDefinitions(node, level))
   }
-
+  // result.push('')
   return result
 }
 

@@ -4,14 +4,14 @@ import { SchemaConditionalOf, SchemaConditionalIf } from "@microfleet/schema-too
 import { Renderer } from './renderer'
 
 export function renderCondOf(node: SchemaConditionalOf, level: number): (DataObject| string)[] {
-  const result: DataObject[] = []
+  const result: (DataObject | string)[] = []
 
-  result.push({ p: `*Could be ${node.condition}:*`})
-
-  // @todo consistent types
-  result.push({
-    ul: node.possibles.map((condition) => Renderer.render(condition, level + 1)) as unknown as string[]
-  })
+  result.push(`*Could be ${node.condition}:*`)
+  result.push(
+    {
+      ul: node.possibles.map((condition) => Renderer.render(condition, level + 1)) as unknown as string[]
+    }
+  )
 
   return result
 }

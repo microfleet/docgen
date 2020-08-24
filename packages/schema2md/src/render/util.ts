@@ -19,7 +19,7 @@ export function getLink(referenceNode: SchemaRef): string {
   return `#${href}`
 }
 
-export function getGenericInfo(node: SchemaNode, _: number): (DataObject | string)[] {
+export function getGenericInfo(node: SchemaNode, _: number): (string|DataObject)[] {
   const result: (DataObject|string)[] = []
 
   const { description } = node.data
@@ -47,7 +47,7 @@ export function getGenericInfo(node: SchemaNode, _: number): (DataObject | strin
 export function renderProps(props: Record<string, SchemaNode> | undefined, level: number): DataObject {
   const ul = Object.entries(props ?? {}).map(( [name , prop] ) => {
     return [
-      `**${name}**`,
+      `**${name.replace(/\|/gi, '&#123;')}**`,
       ...Renderer.render(prop, level + 1)
     ]
   })
@@ -57,12 +57,12 @@ export function renderProps(props: Record<string, SchemaNode> | undefined, level
 
 export function renderDefinitions(node: SchemaNode, level: number): DataObject {
   const definitions = node.definitions ?? {}
-  const ul = Object.entries(definitions).map(( [,prop] ) => {
-    return [
+  const ul = Object.entries(definitions).map(( [,prop] ) =>
+    [
       `**${node.data.$id || ''}#${prop.path.toString()}**`,
-      ...Renderer.render(prop, level + 2)
+      ...Renderer.render(prop, level + 2),
     ]
-  })
+  )
   return {
     // @todo consistent types
     ul: ul as unknown as string[] // dirty hack

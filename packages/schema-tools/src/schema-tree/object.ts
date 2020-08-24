@@ -3,7 +3,7 @@ import { ResolvedSchema } from '../reference-parser'
 
 export class SchemaObject extends SchemaNode {
   public properties?: { [key: string]: SchemaNode }
-  public additionalProperties?: { [key: string]: SchemaNode } | SchemaNode
+  public additionalProperties?: ({ [key: string]: SchemaNode } | SchemaNode)
   public patternProperties?: { [key: string]: SchemaNode }
   public haveAdditionalProperties: boolean
 
@@ -14,20 +14,23 @@ export class SchemaObject extends SchemaNode {
 
     this.type = 'x-object'
 
+    if (!this.dataType) this.dataType = 'object'
+
     this.properties = this.parseProperties(properties, 'properties', { isProperty: true })
     this.patternProperties = this.parseProperties(patternProperties, 'patternProperties', { isPatternProperty: true })
 
     if (typeof additionalProperties === 'boolean') {
       this.haveAdditionalProperties = additionalProperties
     } else {
-      if (typeof additionalProperties === 'object' && (additionalProperties.type || additionalProperties.$ref)) {
-        this.additionalProperties = this.parseNode(additionalProperties, { isAdditionalProperty: true })
-      } else {
-        this.additionalProperties = this.parseProperties(additionalProperties, 'additionalProperties', { isAdditionalProperty: true })
+      if (typeof additionalProperties === 'object') {
+        if (additionalProperties.type || additionalProperties.$ref || SchemaNode.hasKeywords(additionalProperties)) {
+          this.additionalProperties = this.parseNode(additionalProperties, { isAdditionalProperty: true })
+        } else {
+          this.additionalProperties = this.parseProperties(additionalProperties, 'additionalProperties', { isAdditionalProperty: true })
+        }
       }
       this.haveAdditionalProperties = Object.keys(this.additionalProperties ?? {}).length > 0 && Object.keys(this.patternProperties ?? {}).length > 0
     }
-
   }
 
   toJSON(): any {

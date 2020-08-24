@@ -154,7 +154,7 @@ export class SchemaNode {
 
   toJSON(): any {
     return {
-      ...this.params,
+      params: this.params,
       type: this.type,
       dataType: this.dataType,
       data: this.data,
@@ -166,6 +166,12 @@ export class SchemaNode {
   static hasKeywords(node: ResolvedSchema): boolean {
     const keys = Object.keys(node)
     const existing = SCHEMA_KEYWORDS.filter((key) => keys.includes(key as string))
+    return existing.length > 0
+  }
+
+  static hasConditionaKeywords(node: ResolvedSchema): boolean {
+    const keys = Object.keys(node)
+    const existing = [...IF_CONDITION_KEYS, OF_CONDITION_KEYS].filter((key) => keys.includes(key as string))
     return existing.length > 0
   }
 

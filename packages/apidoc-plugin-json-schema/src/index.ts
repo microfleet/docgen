@@ -14,7 +14,7 @@ module.exports = {
     const config = { ...defaults, ...app.packageInfos.schemas}
     const refParser = new RefParser({
       schemaDirs: config.path,
-      deep: false,
+      deep: true,
     })
 
     refParser.findSchemasSync()

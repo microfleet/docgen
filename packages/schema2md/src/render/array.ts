@@ -16,7 +16,7 @@ export function renderArray(node: SchemaArray, level: number): (string | DataObj
   })
 
   // @todo consistent types
-  result.push({ p: `Each item should be:` }, { ul: ul as string[] })
+  result.push(['Each item should be:', { ul: [ul] }])
 
   return result
 }

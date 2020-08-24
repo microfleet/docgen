@@ -27,6 +27,9 @@ function walkObject(args: WalkParams, cb: WalkCb) {
   const params = { parent: node, parentPtr: ptr, root, extra }
 
   if (typeof node === 'object' && !Array.isArray(node)) {
+    // skip reference
+    if (node.$xRef) return
+
     for (const [childKey, child] of Object.entries(node)) {
       // skip internally created fields
       if (childKey.startsWith('$x')) continue
