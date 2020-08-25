@@ -10,31 +10,29 @@ export function renderObject(node: SchemaObject, level: number): DataObject[] | 
   result.push(...getGenericInfo(node, level))
 
   if (node.properties) {
-    result.push({ br: "Properties:"})
+    result.push('Properties:')
     result.push(renderProps(node.properties, level + 1))
   }
 
   if (node.additionalProperties) {
     if (node.additionalProperties instanceof SchemaNode) {
-      result.push({ br: [
-        'Additional properties should be:',
-        ]
-      }, {
+      result.push({p: 'Additional properties should be:'})
+      result.push({
         ul: [...Renderer.render(node.additionalProperties, level + 1)]
       })
     } else {
-      result.push({ br: "Additional properties:"})
+      result.push({p:'Additional properties:'})
       result.push(renderProps(node.additionalProperties, level + 1))
     }
   }
 
   if (node.patternProperties) {
-    result.push({ br: "**Pattern properties**:"})
+    result.push({p: '**Pattern properties**:'})
     result.push(renderProps(node.patternProperties, level + 1))
   }
 
   if (node.definitions) {
-    result.push({ br: "**Definitions**:"})
+    result.push('**Definitions**:')
     result.push(renderDefinitions(node, level))
   }
   // result.push('')

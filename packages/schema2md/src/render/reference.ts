@@ -4,7 +4,10 @@ import { SchemaRef } from "@microfleet/schema-tools"
 import { getLink } from './util'
 import { Renderer } from './renderer'
 
-export function renderRef(node: SchemaRef, _: number): DataObject[] | string[] {
+export function renderRef(node: SchemaRef, level: number): (DataObject | string)[] {
+  if (level === 0) {
+    return Renderer.render(node.refData, level)
+  }
   const result = []
   const { title, $id } = node.data
   const idText = $id ? `\`${$id}\` ` : ''

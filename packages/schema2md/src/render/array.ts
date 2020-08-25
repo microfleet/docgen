@@ -8,15 +8,11 @@ export function renderArray(node: SchemaArray, level: number): (string | DataObj
   const result: (string | DataObject)[] = []
   const ul: (string | DataObject)[] = []
 
-  result.push(...getGenericInfo(node, level))
-
-  const subs = (Array.isArray(node.items) ? node.items : [ node.items ])
-  subs.forEach((sub) => {
-    ul.push(...Renderer.render(sub, level + 1))
-  })
-
   // @todo consistent types
-  result.push([{br: 'Each item should be:'}, { ul: [ul] }])
+  result.push(
+    [...getGenericInfo(node, level), '<br>Each item should be:', Renderer.render(node.items, level + 1)],
+    { ul: ul as string[] }
+  )
 
   return result
 }

@@ -26,24 +26,27 @@ export function getGenericInfo(node: SchemaNode, _: number): (string|DataObject)
   const { path } = node
 
   let link = ''
+  const dataType = node.dataType ? `\`{${node.dataType}}\`<br>` : ''
 
-  if (node.params.isDefinition || isProperty(node)) {
+  if (node.params.isDefinition || isProperty(node) || node.params.rootId === node.data.$id) {
     const href = `${node.params.rootId || ''}#${path.toString()}`.replace(/#/g, '--')
     link = `<a name="${href}"/>`
   }
 
-  result.push({br: `\`{${node.dataType}}\` ${link}`})
+  result.push(`${link}${dataType}`)
 
   if (node.type === 'x-object' ) {
-    result.push({ br: `Additional properties allowed: \`${(node as SchemaObject).haveAdditionalProperties}\``})
+    result.push(`Additional properties allowed: \`${(node as SchemaObject).haveAdditionalProperties}\`<br>`)
   }
 
   if (Object.keys(node.constraints).length > 0) {
-    const asStrings = Object.entries(node.constraints).map(([key, value]) => `\`${key}\`: \`${value}\``)
-    result.push({br: `Constraints: ${asStrings.join(', ')}`})
+    const asStrings = Object.entries(node.constraints).map(([key, value]) => `\`${key}\`: \`${JSON.stringify(value)}\``)
+    result.push(`Constraints: ${asStrings.join(', ')}<br>`)
   }
 
-  if (description) result.push({ p: description })
+  if (description) {
+    result.push({ p: `${description}` })
+  }
 
   return result
 }
@@ -65,7 +68,7 @@ export function renderDefinitions(node: SchemaNode, level: number): DataObject {
     [
       `**${node.data.$id || ''}#${prop.path.toString()}**`,
       ...Renderer.render(prop, level + 2),
-      { br: '' }
+      { p: ' ' }
     ]
   )
   return {
