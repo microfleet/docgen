@@ -10,7 +10,7 @@ export function renderArray(node: SchemaArray, level: number): (string | DataObj
 
   // @todo consistent types
   result.push(
-    [...getGenericInfo(node, level), '<br>Each item should be:', Renderer.render(node.items, level + 1)],
+    [...getGenericInfo(node, level), 'Each item should be:', Renderer.render(node.items, level + 1)],
     { ul: ul as string[] }
   )
 

@@ -68,7 +68,7 @@ export function renderDefinitions(node: SchemaNode, level: number): DataObject {
     [
       `**${node.data.$id || ''}#${prop.path.toString()}**`,
       ...Renderer.render(prop, level + 2),
-      { p: ' ' }
+      '<br>'
     ]
   )
   return {
