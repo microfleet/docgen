@@ -78,7 +78,7 @@ export class SchemaNode {
 
     this.params = restParams
     this.dataType = type
-    this.constraints = omit(rest, ['$id', 'definitions', ...SCHEMA_DESCRIPTION_KEYS, ...IF_CONDITION_KEYS])
+    this.constraints = omit(rest, ['$id', 'definitions', 'properties', 'additionalProperties', 'patternProperties', ...SCHEMA_DESCRIPTION_KEYS, ...IF_CONDITION_KEYS])
     this.data = pick(rest, ['$id', ...SCHEMA_DESCRIPTION_KEYS])
     this.path = path
     this.parentPath = parentPath

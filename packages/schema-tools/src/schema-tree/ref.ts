@@ -4,6 +4,7 @@ import { omit } from 'lodash'
 
 export class SchemaRef extends SchemaNode {
   public ref: ResolvedReference
+  public refData: SchemaNode
 
   constructor(node: ResolvedSchema, params: Partial<Params>) {
     super(omit(node, ['$ref', '$xRef']), params)
@@ -13,12 +14,14 @@ export class SchemaRef extends SchemaNode {
     if (!node.$xRef) throw new Error('no reference set')
 
     this.ref = node.$xRef
+    this.refData = this.parseNode(omit(node, '$xRef', '$ref'))
   }
 
   toJSON(): any {
     return {
       ...super.toJSON(),
-      reference: this.ref
+      reference: this.ref,
+      referenceData: this.refData
     }
   }
 
