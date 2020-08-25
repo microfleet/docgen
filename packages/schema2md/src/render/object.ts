@@ -1,5 +1,5 @@
 import { DataObject } from "json2md"
-import { SchemaObject, SchemaNode } from "@microfleet/schema-tools"
+import type { SchemaObject, SchemaNode } from "@microfleet/schema-tools"
 
 import { getGenericInfo, renderDefinitions, renderProps } from './util'
 import { Renderer } from './renderer'
@@ -15,14 +15,15 @@ export function renderObject(node: SchemaObject, level: number): DataObject[] | 
   }
 
   if (node.additionalProperties) {
-    if (node.additionalProperties instanceof SchemaNode) {
+    // in case we are processing serialized version it's not possible to use instance of
+    if (node.additionalProperties.type) {
       result.push({p: 'Additional properties should be:'})
       result.push({
-        ul: [...Renderer.render(node.additionalProperties, level + 1)]
+        ul: [...Renderer.render(node.additionalProperties as SchemaNode, level + 1)]
       })
     } else {
       result.push({p:'Additional properties:'})
-      result.push(renderProps(node.additionalProperties, level + 1))
+      result.push(renderProps(node.additionalProperties as {[key: string]: SchemaNode}, level + 1))
     }
   }
 
