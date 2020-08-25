@@ -3,7 +3,6 @@ import * as json2md from 'json2md'
 
 import { SchemaNode, SchemaInfo, } from '@microfleet/schema-tools'
 import { Render } from '@microfleet/schema2md'
-import * as util from 'util'
 
 import { ParseResult } from '../parser/api_schema'
 
@@ -41,7 +40,6 @@ function findRefsDeep(app: Application, schema: SchemaNode, preparedSchemas: Pre
           const resolved = app.mft.refParser.resolveSchema(schema?.schema)
           const parsed = SchemaNode.parse(resolved)
           const rendered = Renderer.render(parsed, 0)
-          console.debug('rendered', schemaId, util.inspect(rendered, { depth: null, colors: true }))
           preparedSchemas.referencedSchemas[schemaId] = { parsed, rendered, schema }
         }
 
