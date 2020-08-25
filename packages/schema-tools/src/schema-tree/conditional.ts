@@ -59,7 +59,7 @@ export class SchemaConditionalOf extends SchemaNode {
     return {
       ...super.toJSON(),
       condition: this.condition,
-      possibilities: this.possibles,
+      possibles: this.possibles,
     }
   }
 

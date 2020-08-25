@@ -20,8 +20,8 @@ export class SchemaRef extends SchemaNode {
   toJSON(): any {
     return {
       ...super.toJSON(),
-      reference: this.ref,
-      referenceData: this.refData
+      ref: this.ref,
+      refData: this.refData
     }
   }
 

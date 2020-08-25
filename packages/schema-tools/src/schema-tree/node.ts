@@ -160,6 +160,8 @@ export class SchemaNode {
       data: this.data,
       constraints: this.constraints,
       definitions: this.definitions,
+      path: this.path.toString(),
+      parentPath: this.parentPath.toString(),
     }
   }
 
