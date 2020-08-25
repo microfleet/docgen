@@ -1,0 +1,31 @@
+{
+  "name": "@microfleet/apidoc-markdown",
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "bin": {
+    "mf-apidoc-markdown": "bin/index.js"
+  },
+  "scripts": {
+    "prepublishOnly": "rimraf ./lib; yarn compile",
+    "compile": "tsc -b tsconfig.build.json",
+    "pretest": "yarn compile",
+    "test": "yarn lint && cross-env NODE_ENV=test nyc mocha ./test/**.spec.ts",
+    "lint": "eslint --ext .ts,.js ./src",
+    "semantic-release": "semantic-release"
+  },
+  "dependencies": {
+    "apidoc-markdown": "^5.1.6",
+    "yargs": "^15.4.1"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.0.4",
+    "@types/yargs": "^15.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "prepare-commit-msg": "./node_modules/@makeomatic/deploy/git-hooks/prepare-commit-msg $HUSKY_GIT_PARAMS"
+    }
+  }
+}
