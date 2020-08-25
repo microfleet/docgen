@@ -2,16 +2,16 @@ import { DataObject } from "json2md"
 import type { SchemaObject, SchemaNode } from "@microfleet/schema-tools"
 
 import { getGenericInfo, renderDefinitions, renderProps } from './util'
-import { Renderer } from './renderer'
+import type { RendererObj } from './index'
 
-export function renderObject(node: SchemaObject, level: number): DataObject[] | any {
+export function renderObject(renderer: RendererObj, node: SchemaObject, level: number): DataObject[] | any {
   const result = []
 
-  result.push(...getGenericInfo(node, level))
+  result.push(...getGenericInfo(renderer, node, level))
 
   if (node.properties) {
     result.push('Properties:')
-    result.push(renderProps(node.properties, level + 1))
+    result.push(renderProps(renderer, node.properties, level + 1))
   }
 
   if (node.additionalProperties) {
@@ -19,25 +19,23 @@ export function renderObject(node: SchemaObject, level: number): DataObject[] | 
     if (node.additionalProperties.type) {
       result.push({p: 'Additional properties should be:'})
       result.push({
-        ul: [...Renderer.render(node.additionalProperties as SchemaNode, level + 1)]
+        ul: [...renderer.render(node.additionalProperties as SchemaNode, level + 1)]
       })
     } else {
       result.push({p:'Additional properties:'})
-      result.push(renderProps(node.additionalProperties as {[key: string]: SchemaNode}, level + 1))
+      result.push(renderProps(renderer, node.additionalProperties as {[key: string]: SchemaNode}, level + 1))
     }
   }
 
   if (node.patternProperties) {
     result.push({p: '**Pattern properties**:'})
-    result.push(renderProps(node.patternProperties, level + 1))
+    result.push(renderProps(renderer, node.patternProperties, level + 1))
   }
 
   if (node.definitions) {
     result.push('**Definitions**:')
-    result.push(renderDefinitions(node, level))
+    result.push(renderDefinitions(renderer, node, level))
   }
   // result.push('')
   return result
 }
-
-Renderer.register('x-object', renderObject)

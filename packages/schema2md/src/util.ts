@@ -1,7 +1,7 @@
 import { DataObject } from 'json2md'
 import { SchemaNode, SchemaRef, SchemaObject } from '@microfleet/schema-tools'
 
-import { Renderer } from './renderer'
+import type { RendererObj } from './index'
 
 export function getHeaderLevel(current: number, level: number, node: SchemaNode): string {
   const finalLevel = current + node.deep + level
@@ -13,24 +13,28 @@ export function isProperty(node: SchemaNode): boolean {
   return params.isProperty || params.isAdditionalProperty || params.isPatternProperty ? true : false
 }
 
-export function getLink(referenceNode: SchemaRef): string {
+export function linkTo(r: RendererObj, referenceNode: SchemaRef): string {
+  if (r.config.linkTo) return `${r.config.linkTo(referenceNode)}`
   const { id, hash } = referenceNode.ref
   const href = `${id || ''}${hash}`.replace(/#/g, '--')
   return `#${href}`
 }
 
-export function getGenericInfo(node: SchemaNode, _: number): (string|DataObject)[] {
+export function linkFrom(r: RendererObj, node: SchemaNode): string {
+  if (r.config.linkFrom) return `${r.config.linkFrom(node)}`
+  return `${node.params.rootId || ''}#${node.path.toString()}`.replace(/#/g, '--')
+}
+
+export function getGenericInfo(renderer: RendererObj, node: SchemaNode, _: number): (string|DataObject)[] {
   const result: (DataObject|string)[] = []
 
   const { description } = node.data
-  const { path } = node
 
   let link = ''
   const dataType = node.dataType ? `\`{${node.dataType}}\`<br>` : ''
 
   if (node.params.isDefinition || isProperty(node) || node.params.rootId === node.data.$id) {
-    const href = `${node.params.rootId || ''}#${path.toString()}`.replace(/#/g, '--')
-    link = `<a name="${href}"/>`
+    link = `<a name="${linkFrom(renderer, node)}"/>`
   }
 
   result.push(`${link}${dataType}`)
@@ -51,23 +55,23 @@ export function getGenericInfo(node: SchemaNode, _: number): (string|DataObject)
   return result
 }
 
-export function renderProps(props: Record<string, SchemaNode> | undefined, level: number): DataObject {
+export function renderProps(renderer: RendererObj, props: Record<string, SchemaNode> | undefined, level: number): DataObject {
   const ul = Object.entries(props ?? {}).map(( [name , prop] ) => {
     return [
       `**${name.replace(/\|/gi, '&#123;')}**`,
-      ...Renderer.render(prop, level + 1)
+      ...renderer.render(prop, level + 1)
     ]
   })
   // @todo consistent types
   return { ul: ul as unknown as string[] } // dirty hack
 }
 
-export function renderDefinitions(node: SchemaNode, level: number): DataObject {
+export function renderDefinitions(renderer: RendererObj, node: SchemaNode, level: number): DataObject {
   const definitions = node.definitions ?? {}
   const ul = Object.entries(definitions).map(( [,prop] ) =>
     [
       `**${node.data.$id || ''}#${prop.path.toString()}**`,
-      ...Renderer.render(prop, level + 2),
+      ...renderer.render(prop, level + 2),
       '<br>'
     ]
   )
