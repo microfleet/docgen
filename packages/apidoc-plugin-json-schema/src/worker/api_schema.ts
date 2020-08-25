@@ -1,24 +1,19 @@
 import { Application, Worker } from 'apidoc'
-import * as json2md from 'json2md'
 
 import { SchemaNode, SchemaInfo, } from '@microfleet/schema-tools'
-import { Render } from '@microfleet/schema2md'
 
 import { ParseResult } from '../parser/api_schema'
-
-const { Renderer } = Render
 
 type ReferenceIndex = {
   [key: string] : {
     parsed: SchemaNode,
-    rendered: any,
     schema: SchemaInfo
   }
 }
 
 type PreparedSchemas = {
   seenSchemas: Set<string>,
-  referencedSchemas: ReferenceIndex
+  referencedSchemas: ReferenceIndex,
 }
 
 function findRefsDeep(app: Application, schema: SchemaNode, preparedSchemas: PreparedSchemas): void {
@@ -39,8 +34,7 @@ function findRefsDeep(app: Application, schema: SchemaNode, preparedSchemas: Pre
         if (!preparedSchemas.referencedSchemas[schemaId]) {
           const resolved = app.mft.refParser.resolveSchema(schema?.schema)
           const parsed = SchemaNode.parse(resolved)
-          const rendered = Renderer.render(parsed, 0)
-          preparedSchemas.referencedSchemas[schemaId] = { parsed, rendered, schema }
+          preparedSchemas.referencedSchemas[schemaId] = { parsed, schema }
         }
 
         // go deep
@@ -59,7 +53,8 @@ function prepareSchemas(this: Application, parsedFiles: any[], _: string[], __: 
   const seenSchemas = new Set()
   const result: any = {
     seenSchemas,
-    referencedSchemas : {}
+    referencedSchemas : {},
+    resolvedSchemas: {},
   }
 
   parsedFiles.forEach((parsedFile: any) => {
@@ -67,16 +62,16 @@ function prepareSchemas(this: Application, parsedFiles: any[], _: string[], __: 
       if (block.local.schemas) {
         for (const [ key, apiSchema] of (Object.entries(block.local.schemas) as [string, ParseResult][])) {
           const parsed = SchemaNode.parse(apiSchema.resolved)
-          const rendered = Renderer.render(parsed, 0)
-
           // mark that we have seen this schema in apidoc blocks
           seenSchemas.add(parsed.data.$id)
 
-          // render markdown from rendered schema
-          block.local.schemas[key] = json2md(rendered)
+          if (!block.local.parsedSchemas) {
+            block.local.parsedSchemas = {}
+            block.local.resolvedSchemas = {}
+          }
 
-          if (!block.local.parsedSchemas) block.local.parsedSchemas = {}
           block.local.parsedSchemas[key] = parsed
+          block.local.resolvedSchemas[key] = apiSchema.resolved
 
           // build referenced schemas index and prepare them
           findRefsDeep(this, parsed, result)
@@ -101,7 +96,7 @@ function createReferencedSchemaBlocks(parsedFiles: any[], filenames: string[], p
 
   Object.values(referencedSchemas)
     .forEach(
-      ({schema, parsed, rendered}) => {
+      ({schema, parsed}) => {
         if (seenSchemas.has(parsed.data.$id)) {
           return
         }
@@ -115,8 +110,8 @@ function createReferencedSchemaBlocks(parsedFiles: any[], filenames: string[], p
           groupTitle: 'Definitions',
           description: parsed.data.description,
           filename: schema.path,
-          schema: json2md(rendered),
-          parsedSchema: schema,
+          parsedSchema: parsed,
+          resolvedSchema: schema,
         }
 
         parsedFiles.push([{ global: {}, local: schemaObj, index: 1 }])
