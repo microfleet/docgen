@@ -8,7 +8,6 @@ import {
   SCHEMA_DESCRIPTION_KEYS,
   IF_CONDITION_KEYS,
   OF_CONDITION_KEYS,
-  SCHEMA_KEYWORDS
 } from './constants'
 
 const emptyPath = JsonPointer.create('')
@@ -108,11 +107,11 @@ export class SchemaNode {
       const isRequired = constraints.required ? constraints.required.includes(prop) : false
       const path = this.path.concat(`/${extraPath}`).concat(`/${key}`)
 
-      if (OF_CONDITION_KEYS.includes(key)) {
-        propsObject[key] = this.parseNode({ [key]: prop }, {...params, isRequired, path })
-      } else {
-        propsObject[key] = this.parseNode(prop, { ...params, isRequired, path })
-      }
+      // if (OF_CONDITION_KEYS.includes(key)) {
+      //   propsObject[key] = this.parseNode({ [key]: prop }, {...params, isRequired, path, isCondition: true })
+      // } else {
+        propsObject[key] = this.parseNode(prop, { ...params, isRequired, path, isCondition: true })
+      // }
     }
 
     return propsObject
@@ -124,8 +123,6 @@ export class SchemaNode {
 
     const segments = node.path.path.slice(parentPathLength, parentPathLength + pathLength - parentPathLength)
     const nodePath = JsonPointer.create(segments)
-
-    if (this.nodes.has(nodePath)) throw new Error(`node path exists: ${nodePath}`)
 
     this.nodes.set(nodePath, node)
     if (this.parent) this.parent.addNode(node)
@@ -163,12 +160,6 @@ export class SchemaNode {
       path: this.path.toString(),
       parentPath: this.parentPath.toString(),
     }
-  }
-
-  static hasKeywords(node: ResolvedSchema): boolean {
-    const keys = Object.keys(node)
-    const existing = SCHEMA_KEYWORDS.filter((key) => keys.includes(key as string))
-    return existing.length > 0
   }
 
   static hasConditionaKeywords(node: ResolvedSchema): boolean {

@@ -21,7 +21,7 @@ function findRefsDeep(app: Application, schema: SchemaNode, preparedSchemas: Pre
     .findRefs()
     .forEach(
       (reference: any) => {
-        if (reference.ref.local) return
+        if (reference.ref.isLocal) return
 
         const schema = Object.values(app.mft.refParser.schemas).find(
           (schema) => schema.path === reference.ref.path

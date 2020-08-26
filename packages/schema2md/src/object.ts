@@ -15,16 +15,10 @@ export function renderObject(renderer: RendererObj, node: SchemaObject, level: n
   }
 
   if (node.additionalProperties) {
-    // in case we are processing serialized version it's not possible to use instance of
-    if (node.additionalProperties.type) {
-      result.push({p: 'Additional properties should be:'})
-      result.push({
-        ul: [...renderer.render(node.additionalProperties as SchemaNode, level + 1)]
-      })
-    } else {
-      result.push({p:'Additional properties:'})
-      result.push(renderProps(renderer, node.additionalProperties as {[key: string]: SchemaNode}, level + 1))
-    }
+    result.push({p: 'Additional properties should be:'})
+    result.push({
+      ul: [...renderer.render(node.additionalProperties as SchemaNode, level + 1)]
+    })
   }
 
   if (node.patternProperties) {

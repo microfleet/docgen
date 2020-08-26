@@ -3,6 +3,7 @@ import { omit } from 'lodash'
 import { SchemaNode, Params } from './node'
 import { IF_CONDITION_KEYS, OF_CONDITION_KEYS, OF_CONDITION } from './constants'
 import { ResolvedSchema } from '../reference-parser'
+import { SchemaObject } from './object'
 
 export class SchemaConditionalIf extends SchemaNode {
   public if: SchemaNode
@@ -31,7 +32,7 @@ export class SchemaConditionalIf extends SchemaNode {
     }
   }
 
-  static isConditionalIf = (node: ResolvedSchema): boolean => { return node.if }
+  static isConditionalIf = (node: ResolvedSchema): boolean => !SchemaObject.isObject(node) && node.if
 }
 
 export class SchemaConditionalOf extends SchemaNode {
@@ -39,16 +40,14 @@ export class SchemaConditionalOf extends SchemaNode {
   public possibles: SchemaNode[]
 
   constructor(node: ResolvedSchema, params: Partial<Params>) {
-    const [condition] = Object.keys(node).filter((key: string) => OF_CONDITION_KEYS.includes((key)))
-    if (!condition) throw new Error('No condition keywords')
-
+    const condition = Object.keys(node).find((key: string) => OF_CONDITION_KEYS.includes((key)))
     const rest = omit(node, OF_CONDITION_KEYS)
 
     super(rest, params)
 
     this.type = 'x-cond-of'
-    this.condition = condition
-    this.possibles = node[condition]
+    this.condition = condition!
+    this.possibles = node[condition!]
       .map((cond: ResolvedSchema, index: number) => {
         const subPath = this.path.concat(`/${condition}/${index}`)
         return this.parseNode(cond, { path: subPath })

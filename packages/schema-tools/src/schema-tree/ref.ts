@@ -10,10 +10,7 @@ export class SchemaRef extends SchemaNode {
     super(omit(node, ['$ref', '$xRef']), params)
     this.type = 'x-ref'
     this.dataType = 'reference'
-
-    if (!node.$xRef) throw new Error('no reference set')
-
-    this.ref = node.$xRef
+    this.ref = node.$xRef!
     this.refData = this.parseNode(omit(node, '$xRef', '$ref'))
   }
 

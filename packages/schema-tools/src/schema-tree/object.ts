@@ -1,9 +1,10 @@
 import { SchemaNode, Params } from './node'
 import { ResolvedSchema } from '../reference-parser'
+import { OBJECT_KEYWORDS } from './constants'
 
 export class SchemaObject extends SchemaNode {
   public properties?: { [key: string]: SchemaNode }
-  public additionalProperties?: ({ [key: string]: SchemaNode } | SchemaNode)
+  public additionalProperties?: SchemaNode
   public patternProperties?: { [key: string]: SchemaNode }
   public haveAdditionalProperties: boolean
 
@@ -13,23 +14,22 @@ export class SchemaObject extends SchemaNode {
     super(rest, params)
 
     this.type = 'x-object'
+    this.haveAdditionalProperties = true
 
     if (!this.dataType) this.dataType = 'object'
 
     this.properties = this.parseProperties(properties, 'properties', { isProperty: true })
     this.patternProperties = this.parseProperties(patternProperties, 'patternProperties', { isPatternProperty: true })
+    if (additionalProperties) {
+      this.additionalProperties = this.parseNode(additionalProperties, { isAdditionalProperty: true })
+    }
+
+    if (this.patternProperties || this.additionalProperties) {
+      this.haveAdditionalProperties = true
+    }
 
     if (typeof additionalProperties === 'boolean') {
       this.haveAdditionalProperties = additionalProperties
-    } else {
-      if (typeof additionalProperties === 'object') {
-        if (additionalProperties.type || additionalProperties.$ref || SchemaNode.hasKeywords(additionalProperties)) {
-          this.additionalProperties = this.parseNode(additionalProperties, { isAdditionalProperty: true })
-        } else {
-          this.additionalProperties = this.parseProperties(additionalProperties, 'additionalProperties', { isAdditionalProperty: true })
-        }
-      }
-      this.haveAdditionalProperties = Object.keys(this.additionalProperties ?? {}).length > 0 && Object.keys(this.patternProperties ?? {}).length > 0
     }
   }
 
@@ -43,8 +43,14 @@ export class SchemaObject extends SchemaNode {
     }
   }
 
+  static hasKeywords(node: ResolvedSchema): boolean {
+    const keys = Object.keys(node)
+    const existing = OBJECT_KEYWORDS.filter((key) => keys.includes(key as string))
+    return existing.length > 0
+  }
+
   static isObject = (node: ResolvedSchema): boolean => {
-    return SchemaObject.hasKeywords(node) || (node.type === 'object')
+    return node.type === 'object' || SchemaObject.hasKeywords(node)
   }
 }
 

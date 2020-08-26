@@ -19,7 +19,6 @@ export type SchemaInfo = {
   path: string,
   base: string,
   resolved: boolean,
-  parsed: boolean,
 }
 
 type ReferenceInfo = {
@@ -29,10 +28,10 @@ type ReferenceInfo = {
 
 export type ResolvedReference = {
   isLocal: boolean,
-  base: string,
-  path: string,
+  base?: string,
+  path?: string,
   hash: string,
-  full: string,
+  full?: string,
   originalRef: string,
   id: string,
 }
@@ -71,6 +70,9 @@ export class RefParser {
         const parsed = JSON.parse(raw)
         const id = parsed.$id || sp.replace(/\.[^.]+$/, '').replace(path.sep, '.')
 
+        // assign id
+        parsed.$id = id
+
         // resolve only local refs
         const resolved = this.resolveSchema(parsed, true)
         this.schemas[id] = {
@@ -78,7 +80,6 @@ export class RefParser {
           path: sp,
           base: schemaDir,
           resolved: false,
-          parsed: false
         }
       })
 
@@ -130,8 +131,8 @@ export class RefParser {
           // const ref = this.asLocalRef(root, node.$ref)
           const ref = ptr.get(root) as ResolvedSchema
           const { $id: _, $ref: __, ...rest } = ref
-          const $xRef = {
-            local: true,
+          const $xRef: ResolvedReference = {
+            isLocal: true,
             hash: node.$ref.replace(/(.+)#/, '#') || '#/',
             originalRef: node.$ref,
             id: root.$id
@@ -152,16 +153,16 @@ export class RefParser {
 
         const refSchemaInfo = refInfo!.schema
 
-        if (! refSchemaInfo.parsed) {
+        if (! refSchemaInfo.resolved) {
           refSchemaInfo.schema = this.resolveSchema(refSchemaInfo.schema, localOnly)
-          refSchemaInfo.parsed = true
+          refSchemaInfo.resolved = true
         }
 
         const parsedRefSchema = refSchemaInfo.schema
         const { $id: _, $ref: __, ...restRefData } = ptr.get(parsedRefSchema) as ResolvedSchema
 
-        const $xRef = {
-          local: false,
+        const $xRef: ResolvedReference = {
+          isLocal: false,
           base: refSchemaInfo.base,
           path: refSchemaInfo.path,
           hash: node.$ref.replace(/(.+)#/, '#') || '#/',
@@ -173,7 +174,14 @@ export class RefParser {
       }
     }
 
-    walk(resultSchema, { post: cb })
+    walk(resultSchema, { pre: cb })
+
+    // save updated schema if such id exists
+    const schemaId = resultSchema.$id
+    if (this.schemas[schemaId]) {
+      this.schemas[schemaId].resolved = true
+      this.schemas[schemaId].schema = resultSchema
+    }
 
     return resultSchema
   }
