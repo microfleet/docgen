@@ -13,7 +13,8 @@ export function renderRef(renderer: RendererObj, node: SchemaRef, level: number)
   const idText = $id ? `\`${$id}\` ` : ''
 
   result.push(
-    `<a href="${linkTo(renderer, node)}">${title || ''}${idText}(${node.ref.originalRef})</a>`
+    `[${title || ''}${idText}(${node.ref.originalRef})](${linkTo(renderer, node)}))`
+    // `<a href="${linkTo(renderer, node)}">${title || ''}${idText}(${node.ref.originalRef})</a>`
   )
 
   return result
