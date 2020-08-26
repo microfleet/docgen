@@ -1,0 +1,9 @@
+{
+  "title": "top schema",
+  "type": "object",
+  "properties": {
+    "referenced": {
+      "$ref": "with-reference#"
+    }
+  }
+}
