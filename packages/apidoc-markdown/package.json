@@ -16,6 +16,9 @@
   },
   "dependencies": {
     "apidoc-markdown": "^5.1.6",
+    "find-up": "^5.0.0",
+    "log-update": "^4.0.0",
+    "read-pkg": "^5.2.0",
     "yargs": "^15.4.1"
   },
   "devDependencies": {

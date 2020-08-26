@@ -3,11 +3,12 @@ import { promises as fs } from 'fs'
 import { generate } from 'apidoc-markdown'
 import { compile } from 'ejs'
 import * as json2md from 'json2md'
+import * as log from 'log-update'
 
 import { RendererObj as Renderer } from '@microfleet/schema2md'
+import { SchemaRef } from '@microfleet/schema-tools'
 
 import { ConfigObj } from './types'
-import { SchemaRef, SchemaNode } from 'schema-tools/lib'
 
 function generateSchemaIndex(apiData: any): Map<string, Set<string>>{
   const index = new Map()
@@ -53,7 +54,6 @@ export async function generateFs(args: ConfigObj): Promise<void> {
       md: {
         renderer,
         render: (_: string, obj: any) => {
-          // console.debug('group:', group, obj)
           const rendered = renderer.render(obj, 0)
           return json2md(rendered)
         },
@@ -61,7 +61,7 @@ export async function generateFs(args: ConfigObj): Promise<void> {
     }
   })
 
-  if (createPath) await fs.mkdir(output, { recursive: true })
+  if (createPath) await fs.mkdir(path.dirname(output), { recursive: true })
 
   const documentation = generate({
     apiDocApiData,
@@ -73,7 +73,7 @@ export async function generateFs(args: ConfigObj): Promise<void> {
 
   if (!multi) {
     const singleDoc = documentation[0].content
-    console.debug('write file', output)
+    log('Write file', output)
     await fs.writeFile(output, singleDoc)
     return
   }
@@ -81,9 +81,11 @@ export async function generateFs(args: ConfigObj): Promise<void> {
   await Promise.all(
     documentation.map(async aDoc => {
       const filePath = path.resolve(output, `${aDoc.name}.md`)
-      console.debug('write file', filePath)
+      log('Write file', filePath)
       await fs.writeFile(filePath, aDoc.content)
       return { outputFile: filePath, content: aDoc.content }
     })
   )
+  log.done()
+  log('Done')
 }

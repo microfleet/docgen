@@ -1,7 +1,22 @@
 import * as path from 'path'
 import * as yargs from 'yargs'
+import * as findUp from 'find-up'
+import * as readPkg from 'read-pkg'
+import * as assert from 'assert'
+import * as fs from 'fs'
 
 import { ConfigObj } from './types'
+
+const parentProject = readPkg.sync()
+assert(parentProject && parentProject.version, 'Must contain package.json in the current dir')
+
+const configPath = findUp.sync(['.apidoc-md.rc', '.apidoc-md.js', '.apidoc-md.json'])
+
+const config = configPath
+  ? configPath.endsWith('.js')
+    ? require(configPath)
+    : JSON.parse(fs.readFileSync(configPath, { encoding: 'utf-8' }))
+  : { default: 1 }
 
 const cli = yargs
   .usage('Generate Markdown documentation from apiDoc data.')
@@ -48,6 +63,7 @@ const cli = yargs
     default: false,
     type: 'boolean'
   })
+  .config(config)
   .help('h')
   .alias('h', 'help')
   .wrap(yargs.terminalWidth())
