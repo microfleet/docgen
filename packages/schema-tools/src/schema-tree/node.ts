@@ -7,7 +7,6 @@ import {
   TREE_NODE_TYPES,
   SCHEMA_DESCRIPTION_KEYS,
   IF_CONDITION_KEYS,
-  OF_CONDITION_KEYS,
 } from './constants'
 
 const emptyPath = JsonPointer.create('')
@@ -106,12 +105,7 @@ export class SchemaNode {
       const { constraints } = this
       const isRequired = constraints.required ? constraints.required.includes(prop) : false
       const path = this.path.concat(`/${extraPath}`).concat(`/${key}`)
-
-      // if (OF_CONDITION_KEYS.includes(key)) {
-      //   propsObject[key] = this.parseNode({ [key]: prop }, {...params, isRequired, path, isCondition: true })
-      // } else {
-        propsObject[key] = this.parseNode(prop, { ...params, isRequired, path, isCondition: true })
-      // }
+      propsObject[key] = this.parseNode(prop, { ...params, isRequired, path, isCondition: true })
     }
 
     return propsObject
@@ -162,11 +156,11 @@ export class SchemaNode {
     }
   }
 
-  static hasConditionaKeywords(node: ResolvedSchema): boolean {
-    const keys = Object.keys(node)
-    const existing = [...IF_CONDITION_KEYS, OF_CONDITION_KEYS].filter((key) => keys.includes(key as string))
-    return existing.length > 0
-  }
+  // static hasConditionaKeywords(node: ResolvedSchema): boolean {
+  //   const keys = Object.keys(node)
+  //   const existing = [...IF_CONDITION_KEYS, OF_CONDITION_KEYS].filter((key) => keys.includes(key as string))
+  //   return existing.length > 0
+  // }
 
   static addParser = (fn: Parser['fn'], cl: Parser['cl']): void => {
     SchemaNode.parsers.add({ fn, cl})

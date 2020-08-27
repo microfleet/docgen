@@ -1,8 +1,10 @@
 import * as assert from 'assert'
-import * as util from 'util'
-const inspect = (obj:any) => util.inspect(obj, { depth: null, colors: true })
 
-import { SchemaRef, SchemaNode, SchemaObject, ResolvedSchema, SchemaArray, SchemaConditionalOf, SchemaConditionalIf } from '@microfleet/schema-tools'
+import {
+  SchemaRef, SchemaNode, SchemaObject,
+  SchemaArray, SchemaConditionalOf, SchemaConditionalIf,
+  ResolvedSchema
+} from '@microfleet/schema-tools'
 
 describe('Schema tree', () => {
   const refSchema: ResolvedSchema = {
@@ -40,6 +42,12 @@ describe('Schema tree', () => {
     assert(parsed instanceof SchemaRef)
     assert.deepStrictEqual(parsed.ref, refSchema.$xRef)
     assert(parsed.refData instanceof SchemaNode)
+    assert.strictEqual(JSON.stringify(parsed),
+      '{"params":{},"type":"x-ref","dataType":"reference","data":{},"constraints":{},'
+      + '"path":"","parentPath":"","ref":{"originalRef":"common#/definitions/foo",'
+      + '"hash":"#definitions/foo","isLocal":true,"id":"common"},"refData":{"params":{},'
+      + '"type":"x-node","data":{},"constraints":{},"path":"","parentPath":""}}'
+    )
   })
 
   describe('parse node', () => {
@@ -89,6 +97,22 @@ describe('Schema tree', () => {
 
       assert(parsed instanceof SchemaObject)
       assert(parsed.ifCondition instanceof SchemaConditionalIf)
+    })
+
+    it('finds references', () => {
+      const node = {
+        type: 'object',
+        properties: {
+          prop: { type: 'string' },
+          secondProp: { type: 'string' },
+          refProp: refSchema,
+        }
+      }
+
+      const parsed = SchemaNode.parse(node)
+
+      assert(parsed instanceof SchemaObject)
+      assert(parsed.findRefs().length === 1)
     })
   })
 
@@ -297,7 +321,6 @@ describe('Schema tree', () => {
       assert.ok(parsed.patternProperties)
       assert(parsed.patternProperties['^asd.*'].type === 'x-object')
     })
-    console.debug(inspect('ab'))
   })
 
 })
