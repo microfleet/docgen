@@ -43,9 +43,9 @@ export async function generateFs(args: ConfigObj): Promise<void> {
     multi,
     linkTo(schema: SchemaRef): string {
       const { id, hash } = schema.ref
-      const base = [...schemaIndex.get(id)!.values()][0] || 'nf'
+      const base = [...schemaIndex.get(id)!.values()][0] || ''
       const href = `${id || ''}${hash}`.replace(/#/g, '--')
-      return `${base}.md#${href}`
+      return multi ? `${base}.md#${href}` : `#${href}`
     },
   })
 
