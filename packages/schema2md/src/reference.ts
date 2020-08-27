@@ -2,10 +2,10 @@ import { DataObject } from "json2md"
 import { SchemaRef } from "@microfleet/schema-tools"
 
 import { linkTo } from './util'
-import type { RendererObj } from './index'
+import type { Renderer } from './index'
 
-export function renderRef(renderer: RendererObj, node: SchemaRef, level: number): (DataObject | string)[] {
-  if (level === 0) {
+export function renderRef(renderer: Renderer, node: SchemaRef, level: number): (DataObject | string)[] {
+  if (node.depth === 0) {
     return renderer.render(node.refData, level)
   }
   const result = []
@@ -13,8 +13,7 @@ export function renderRef(renderer: RendererObj, node: SchemaRef, level: number)
   const idText = $id ? `\`${$id}\` ` : ''
 
   result.push(
-    `[${title || ''}${idText}(${node.ref.originalRef})](${linkTo(renderer, node)}))`
-    // `<a href="${linkTo(renderer, node)}">${title || ''}${idText}(${node.ref.originalRef})</a>`
+    `[${title || ''}${idText}(${node.ref.originalRef})](${linkTo(renderer, node)})`
   )
 
   return result

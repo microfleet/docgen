@@ -8,7 +8,7 @@ import type { DataObject } from 'json2md'
 
 import { TREE_NODE_TYPES, SchemaNode, SchemaRef } from '@microfleet/schema-tools'
 
-type RenderFn = (renderer: RendererObj, node: any, level: number) => (DataObject|string)[]
+type RenderFn = (renderer: Renderer, node: any, level: number) => (DataObject|string)[]
 
 type Config = {
   multi: boolean
@@ -19,7 +19,7 @@ type Config = {
 
 type RendererMap = Map<typeof TREE_NODE_TYPES[number], RenderFn>
 
-export class RendererObj {
+export class Renderer {
   public config: Config
   private renderers: RendererMap = new Map()
 

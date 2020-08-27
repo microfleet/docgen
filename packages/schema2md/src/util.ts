@@ -1,31 +1,26 @@
 import { DataObject } from 'json2md'
 import { SchemaNode, SchemaRef, SchemaObject } from '@microfleet/schema-tools'
 
-import type { RendererObj } from './index'
-
-export function getHeaderLevel(current: number, level: number, node: SchemaNode): string {
-  const finalLevel = current + node.deep + level
-  return `h${finalLevel > 6 ? 6 : finalLevel }`
-}
+import type { Renderer } from './index'
 
 export function isProperty(node: SchemaNode): boolean {
   const { params } = node
   return params.isProperty || params.isAdditionalProperty || params.isPatternProperty ? true : false
 }
 
-export function linkTo(r: RendererObj, referenceNode: SchemaRef): string {
+export function linkTo(r: Renderer, referenceNode: SchemaRef): string {
   if (r.config.linkTo) return `${r.config.linkTo(referenceNode)}`
   const { id, hash } = referenceNode.ref
   const href = `${id || ''}${hash}`.replace(/#/g, '--')
   return `#${href}`
 }
 
-export function linkFrom(r: RendererObj, node: SchemaNode): string {
+export function linkFrom(r: Renderer, node: SchemaNode): string {
   if (r.config.linkFrom) return `${r.config.linkFrom(node)}`
   return `${node.params.rootId || ''}#${node.path.toString()}`.replace(/#/g, '--')
 }
 
-export function getGenericInfo(renderer: RendererObj, node: SchemaNode, _: number): (string|DataObject)[] {
+export function getGenericInfo(renderer: Renderer, node: SchemaNode, level: number): (string|DataObject)[] {
   const result: (DataObject|string)[] = []
 
   const { description } = node.data
@@ -52,10 +47,14 @@ export function getGenericInfo(renderer: RendererObj, node: SchemaNode, _: numbe
     result.push({ p: `${description}` })
   }
 
+  if (node.ifCondition) {
+    result.push(renderer.render(node.ifCondition, level + 1))
+  }
+
   return result
 }
 
-export function renderProps(renderer: RendererObj, props: Record<string, SchemaNode> | undefined, level: number): DataObject {
+export function renderProps(renderer: Renderer, props: Record<string, SchemaNode> | undefined, level: number): DataObject {
   const ul = Object.entries(props ?? {}).map(( [name , prop] ) => {
     return [
       `**${name.replace(/\|/gi, '&#123;')}**`,
@@ -66,7 +65,7 @@ export function renderProps(renderer: RendererObj, props: Record<string, SchemaN
   return { ul: ul as unknown as string[] } // dirty hack
 }
 
-export function renderDefinitions(renderer: RendererObj, node: SchemaNode, level: number): DataObject {
+export function renderDefinitions(renderer: Renderer, node: SchemaNode, level: number): DataObject {
   const definitions = node.definitions ?? {}
   const ul = Object.entries(definitions).map(( [,prop] ) =>
     [

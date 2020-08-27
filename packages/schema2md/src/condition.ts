@@ -1,9 +1,9 @@
 import { DataObject } from "json2md"
 import { SchemaConditionalOf, SchemaConditionalIf } from "@microfleet/schema-tools"
 
-import type { RendererObj } from './index'
+import type { Renderer } from './index'
 
-export function renderCondOf(renderer: RendererObj, node: SchemaConditionalOf, level: number): (DataObject| string)[] {
+export function renderCondOf(renderer: Renderer, node: SchemaConditionalOf, level: number): (DataObject| string)[] {
   const result: (DataObject | string)[] = []
 
   result.push(`*Could be ${node.condition}:*`)
@@ -17,7 +17,7 @@ export function renderCondOf(renderer: RendererObj, node: SchemaConditionalOf, l
 }
 
 
-export function renderCondIf(renderer: RendererObj, node: SchemaConditionalIf, level: number): DataObject[] {
+export function renderCondIf(renderer: Renderer, node: SchemaConditionalIf, level: number): DataObject[] {
   const result: (DataObject | string)[] = []
   result.push([
     `*If:*`,

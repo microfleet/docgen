@@ -2,9 +2,9 @@ import { DataObject } from "json2md"
 import type { SchemaObject, SchemaNode } from "@microfleet/schema-tools"
 
 import { getGenericInfo, renderDefinitions, renderProps } from './util'
-import type { RendererObj } from './index'
+import type { Renderer } from './index'
 
-export function renderObject(renderer: RendererObj, node: SchemaObject, level: number): DataObject[] | any {
+export function renderObject(renderer: Renderer, node: SchemaObject, level: number): DataObject[] | any {
   const result = []
 
   result.push(...getGenericInfo(renderer, node, level))
@@ -30,6 +30,6 @@ export function renderObject(renderer: RendererObj, node: SchemaObject, level: n
     result.push('**Definitions**:')
     result.push(renderDefinitions(renderer, node, level))
   }
-  // result.push('')
+
   return result
 }
