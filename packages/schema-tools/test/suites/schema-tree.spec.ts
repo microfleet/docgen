@@ -44,9 +44,9 @@ describe('Schema tree', () => {
     assert(parsed.refData instanceof SchemaNode)
     assert.strictEqual(JSON.stringify(parsed),
       '{"params":{},"type":"x-ref","dataType":"reference","data":{},"constraints":{},'
-      + '"path":"","parentPath":"","ref":{"originalRef":"common#/definitions/foo",'
+      + '"path":"","parentPath":"","depth":0,"ref":{"originalRef":"common#/definitions/foo",'
       + '"hash":"#definitions/foo","isLocal":true,"id":"common"},"refData":{"params":{},'
-      + '"type":"x-node","data":{},"constraints":{},"path":"","parentPath":""}}'
+      + '"type":"x-node","data":{},"constraints":{},"path":"","parentPath":"","depth":1}}'
     )
   })
 
@@ -130,10 +130,10 @@ describe('Schema tree', () => {
       assert([...parsed.possibles.values()].length === 2)
 
       assert.strictEqual(JSON.stringify(parsed),
-        '{"params":{},"type":"x-cond-of","data":{},"constraints":{},"path":"","parentPath":"",'
+        '{"params":{},"type":"x-cond-of","data":{},"constraints":{},"path":"","parentPath":"","depth":0,'
         + '"condition":"anyOf","possibles":[{"params":{},"type":"x-node","dataType":"string","data":{},'
-        + '"constraints":{},"path":"/anyOf/0","parentPath":""},{"params":{},"type":"x-node","dataType":"number",'
-        + '"data":{},"constraints":{},"path":"/anyOf/1","parentPath":""}]}'
+        + '"constraints":{},"path":"/anyOf/0","parentPath":"","depth":1},{"params":{},"type":"x-node","dataType":"number",'
+        + '"data":{},"constraints":{},"path":"/anyOf/1","parentPath":"","depth":1}]}'
       )
     })
 
@@ -199,19 +199,19 @@ describe('Schema tree', () => {
         assert(parsed.else!.dataType === 'object')
 
         assert.deepStrictEqual(JSON.stringify(parsed),
-          '{"params":{},"type":"x-cond-if","data":{},"constraints":{},"path":"","parentPath":""'
+          '{"params":{},"type":"x-cond-if","data":{},"constraints":{},"path":"","parentPath":"","depth":0'
           + ',"if":{"params":{},"type":"x-object","dataType":"object","data":{},"constraints":'
-          + '{"required":["prop"]},"path":"","parentPath":"","haveAdditionalProperties":true,'
+          + '{"required":["prop"]},"path":"","parentPath":"","depth":1,"haveAdditionalProperties":true,'
           + '"properties":{"prop":{"params":{"isProperty":true,"isRequired":false,"isCondition":true},'
           + '"type":"x-node","dataType":"string","data":{},"constraints":{},"path":"/properties/prop",'
-          + '"parentPath":""}}},"then":{"params":{},"type":"x-object","dataType":"object","data":{},'
-          + '"constraints":{},"path":"/then","parentPath":"","haveAdditionalProperties":true,"properties":'
+          + '"parentPath":"","depth":2}}},"then":{"params":{},"type":"x-object","dataType":"object","data":{},'
+          + '"constraints":{},"path":"/then","parentPath":"","depth":1,"haveAdditionalProperties":true,"properties":'
           + '{"thenProp":{"params":{"isProperty":true,"isRequired":false,"isCondition":true},"type":"x-node",'
-          + '"dataType":"string","data":{},"constraints":{},"path":"/then/properties/thenProp","parentPath":"/then"}}},'
+          + '"dataType":"string","data":{},"constraints":{},"path":"/then/properties/thenProp","parentPath":"/then","depth":2}}},'
           + '"else":{"params":{},"type":"x-object","dataType":"object","data":{},"constraints":{},"path":"/else",'
-          + '"parentPath":"","haveAdditionalProperties":true,"properties":{"elseProp":{"params":{"isProperty":true,'
+          + '"parentPath":"","depth":1,"haveAdditionalProperties":true,"properties":{"elseProp":{"params":{"isProperty":true,'
           + '"isRequired":false,"isCondition":true},"type":"x-node","dataType":"string","data":{},"constraints":{},'
-          + '"path":"/else/properties/elseProp","parentPath":"/else"}}}}'
+          + '"path":"/else/properties/elseProp","parentPath":"/else","depth":2}}}}'
         )
       })
 
@@ -264,16 +264,16 @@ describe('Schema tree', () => {
       assert.ok(parsed.properties)
       assert.strictEqual(JSON.stringify(parsed),
         '{"params":{},"type":"x-object","dataType":"object","data":{},"constraints":{"required":'
-        + '["first","second"]},"path":"","parentPath":"","haveAdditionalProperties":true,"properties":'
+        + '["first","second"]},"path":"","parentPath":"","depth":0,"haveAdditionalProperties":true,"properties":'
         + '{"first":{"params":{"isProperty":true,"isRequired":false,"isCondition":true},"type":"x-node",'
         + '"dataType":"string","data":{},"constraints":{"minLength":10},"path":"/properties/first",'
-        + '"parentPath":""},"second":{"params":{"isProperty":true,"isRequired":false,"isCondition":true}'
+        + '"parentPath":"","depth":1},"second":{"params":{"isProperty":true,"isRequired":false,"isCondition":true}'
         + ',"type":"x-node","dataType":"number","data":{},"constraints":{"maximum":10},'
-        + '"path":"/properties/second","parentPath":""},"array":{"params":{"isProperty":true,'
+        + '"path":"/properties/second","parentPath":"","depth":1},"array":{"params":{"isProperty":true,'
         + '"isRequired":false,"isCondition":true},"type":"x-array","dataType":"array","data":{},'
-        + '"constraints":{},"path":"/properties/array","parentPath":"","items":{"params":{"isProperty":true,'
+        + '"constraints":{},"path":"/properties/array","parentPath":"","depth":1,"items":{"params":{"isProperty":true,'
         + '"isRequired":false,"isCondition":true},"type":"x-node","dataType":"string","data":{},"constraints":'
-        + '{"const":"foo"},"path":"/properties/array/items","parentPath":"/properties/array"}}}}'
+        + '{"const":"foo"},"path":"/properties/array/items","parentPath":"/properties/array","depth":2}}}}'
       )
     })
 

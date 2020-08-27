@@ -5,7 +5,7 @@ import { compile } from 'ejs'
 import * as json2md from 'json2md'
 import * as log from 'log-update'
 
-import { RendererObj as Renderer } from '@microfleet/schema2md'
+import { Renderer as Renderer } from '@microfleet/schema2md'
 import { SchemaRef } from '@microfleet/schema-tools'
 
 import { ConfigObj } from './types'

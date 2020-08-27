@@ -24,7 +24,7 @@ type Specs = {
 export type Params = Specs & {
   path: JsonPointer,
   parentPath: JsonPointer,
-  deep: number,
+  depth: number,
   parent: SchemaNode,
 }
 
@@ -56,7 +56,7 @@ export class SchemaNode {
   public data: Data
   public path: JsonPointer
   public parentPath: JsonPointer
-  public deep: number
+  public depth: number
   public parent?: SchemaNode
 
   public ifCondition: any; // #TODO
@@ -68,10 +68,10 @@ export class SchemaNode {
     const defaults = {
       path: emptyPath,
       parentPath: emptyPath,
-      deep: 0,
+      depth: 0,
     }
 
-    const { path, parentPath, parent, deep, ...restParams } = { ...defaults , ...params }
+    const { path, parentPath, parent, depth, ...restParams } = { ...defaults , ...params }
     const { type, ...rest } = node
 
     this.params = restParams
@@ -81,7 +81,7 @@ export class SchemaNode {
     this.path = path
     this.parentPath = parentPath
     this.parent = parent
-    this.deep = deep
+    this.depth = depth
 
     const conditionals = pick(rest, IF_CONDITION_KEYS)
     if (Object.keys(conditionals).length > 0) {
@@ -131,7 +131,7 @@ export class SchemaNode {
       ...params,
       parent: this,
       parentPath: this.path,
-      deep: this.deep + 1
+      depth: params?.depth ?? this.depth + 1
     })
 
     this.addNode(newNode)
@@ -153,20 +153,15 @@ export class SchemaNode {
       definitions: this.definitions,
       path: this.path.toString(),
       parentPath: this.parentPath.toString(),
+      depth: this.depth,
     }
   }
-
-  // static hasConditionaKeywords(node: ResolvedSchema): boolean {
-  //   const keys = Object.keys(node)
-  //   const existing = [...IF_CONDITION_KEYS, OF_CONDITION_KEYS].filter((key) => keys.includes(key as string))
-  //   return existing.length > 0
-  // }
 
   static addParser = (fn: Parser['fn'], cl: Parser['cl']): void => {
     SchemaNode.parsers.add({ fn, cl})
   }
 
   static parse = (schema: ResolvedSchema): SchemaNode => {
-    return (new SchemaNode({}, {})).parseNode(schema, { rootId: schema.$id, deep: -1 })
+    return (new SchemaNode({}, { depth: -1 })).parseNode(schema, { rootId: schema.$id })
   }
 }
