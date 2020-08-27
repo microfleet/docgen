@@ -4,5 +4,6 @@ module.exports = {
   exit: true,
   reporter: 'spec',
   require: 'ts-node/register',
-  extension: ["ts"]
+  extension: ["ts"],
+  inlineDiffs: true,
 }
