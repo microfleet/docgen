@@ -1,11 +1,9 @@
 import * as assert from 'assert'
-import * as util from 'util'
 
 import { ResolvedSchema, SchemaNode } from '@microfleet/schema-tools'
 import { Renderer } from '@microfleet/schema2md'
 
 const parseSchema = (schema: ResolvedSchema) => SchemaNode.parse(schema)
-const inspect = (obj: any) => util.inspect(obj, { colors: true, depth: null })
 
 describe('Schema2md', () => {
   let renderer: Renderer
