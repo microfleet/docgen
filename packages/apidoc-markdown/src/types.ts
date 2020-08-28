@@ -1,4 +1,4 @@
-export interface ConfigObj {
+export interface Config {
   apiDocPath: string
   output: string
   template: string

@@ -5,7 +5,7 @@ import * as readPkg from 'read-pkg'
 import * as assert from 'assert'
 import * as fs from 'fs'
 
-import { ConfigObj } from './types'
+import { Config } from './types'
 
 const parentProject = readPkg.sync()
 assert(parentProject && parentProject.version, 'Must contain package.json in the current dir')
@@ -68,4 +68,4 @@ const cli = yargs
   .alias('h', 'help')
   .wrap(yargs.terminalWidth())
 
-export default <ConfigObj>cli.argv
+export default <Config>cli.argv

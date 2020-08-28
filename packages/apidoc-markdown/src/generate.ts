@@ -8,7 +8,7 @@ import * as log from 'log-update'
 import { Renderer as Renderer } from '@microfleet/schema2md'
 import { SchemaRef } from '@microfleet/schema-tools'
 
-import { ConfigObj } from './types'
+import { Config } from './types'
 
 function generateSchemaIndex(apiData: any): Map<string, Set<string>>{
   const index = new Map()
@@ -30,8 +30,10 @@ function generateSchemaIndex(apiData: any): Map<string, Set<string>>{
   return index
 }
 
-export async function generateFs(args: ConfigObj): Promise<void> {
+export async function generateFs(args: Config): Promise<void> {
   const { multi, prepend, output, createPath } = args
+  // eslint-disable-next-line no-console
+  console.debug(args)
   const apiDocApiData = await import(path.join(args.apiDocPath, 'api_data.json'))
   const apiDocProjectData = await import(path.join(args.apiDocPath, 'api_project.json'))
 
@@ -61,7 +63,13 @@ export async function generateFs(args: ConfigObj): Promise<void> {
     }
   })
 
-  if (createPath) await fs.mkdir(path.dirname(output), { recursive: true })
+  if (createPath) {
+    try {
+      await fs.stat(output)
+    } catch(e) {
+      await fs.mkdir(multi ? output : path.dirname(output), { recursive: true })
+    }
+  }
 
   const documentation = generate({
     apiDocApiData,
@@ -80,7 +88,7 @@ export async function generateFs(args: ConfigObj): Promise<void> {
 
   await Promise.all(
     documentation.map(async aDoc => {
-      const filePath = path.resolve(output, `${aDoc.name}.md`)
+      const filePath = path.join(output, `${aDoc.name}.md`)
       log('Write file', filePath)
       await fs.writeFile(filePath, aDoc.content)
       return { outputFile: filePath, content: aDoc.content }

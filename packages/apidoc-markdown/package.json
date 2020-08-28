@@ -4,13 +4,13 @@
   "main": "lib/index.js",
   "license": "MIT",
   "bin": {
-    "mf-apidoc-markdown": "bin/index.js"
+    "mdoc-markdown": "bin/index.js"
   },
   "scripts": {
     "prepublishOnly": "rimraf ./lib; yarn compile",
     "compile": "tsc -b tsconfig.build.json",
     "pretest": "yarn compile",
-    "test": "yarn lint && cross-env NODE_ENV=test nyc mocha ./test/**.spec.ts",
+    "test": "yarn lint && yarn cross-env NODE_ENV=test nyc mocha ./test/**/*.spec.ts",
     "lint": "eslint --ext .ts,.js ./src",
     "semantic-release": "semantic-release"
   },

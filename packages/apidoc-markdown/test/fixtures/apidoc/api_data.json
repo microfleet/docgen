@@ -1,0 +1,501 @@
+[
+  {
+    "type": "get",
+    "url": "/api/some-with-reference",
+    "title": "",
+    "description": "<p>api schema with reference</p>",
+    "schemas": {
+      "response": {
+        "schema": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "myfield": {
+                "$ref": "common#/definitions/field",
+                "$xRef": {
+                  "isLocal": false,
+                  "base": "/sample/schemas",
+                  "path": "common.json",
+                  "hash": "#/definitions/field",
+                  "full": "common.json#/definitions/field",
+                  "originalRef": "common#/definitions/field",
+                  "id": "common"
+                },
+                "type": "string",
+                "description": "sample string definition"
+              },
+              "secondField": {
+                "$ref": "request#",
+                "$xRef": {
+                  "isLocal": false,
+                  "base": "/sample/schemas",
+                  "path": "request.json",
+                  "hash": "#",
+                  "full": "request.json#",
+                  "originalRef": "request#",
+                  "id": "request"
+                },
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "prop": {
+                    "type": "string"
+                  }
+                }
+              },
+              "otherField": {
+                "$ref": "#/definitions/other-field",
+                "$xRef": {
+                  "isLocal": true,
+                  "hash": "#/definitions/other-field",
+                  "originalRef": "#/definitions/other-field",
+                  "id": "with-reference"
+                },
+                "type": "number"
+              }
+            },
+            "definitions": {
+              "other-field": {
+                "type": "number"
+              }
+            },
+            "$id": "with-reference"
+          },
+          "path": "with-reference.json",
+          "base": "/sample/schemas",
+          "resolved": true
+        },
+        "resolved": {
+          "type": "object",
+          "properties": {
+            "myfield": {
+              "$ref": "common#/definitions/field",
+              "$xRef": {
+                "isLocal": false,
+                "base": "/sample/schemas",
+                "path": "common.json",
+                "hash": "#/definitions/field",
+                "full": "common.json#/definitions/field",
+                "originalRef": "common#/definitions/field",
+                "id": "common"
+              },
+              "type": "string",
+              "description": "sample string definition"
+            },
+            "secondField": {
+              "$ref": "request#",
+              "$xRef": {
+                "isLocal": false,
+                "base": "/sample/schemas",
+                "path": "request.json",
+                "hash": "#",
+                "full": "request.json#",
+                "originalRef": "request#",
+                "id": "request"
+              },
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "prop": {
+                  "type": "string"
+                }
+              }
+            },
+            "otherField": {
+              "$ref": "#/definitions/other-field",
+              "$xRef": {
+                "isLocal": true,
+                "hash": "#/definitions/other-field",
+                "originalRef": "#/definitions/other-field",
+                "id": "with-reference"
+              },
+              "type": "number"
+            }
+          },
+          "definitions": {
+            "other-field": {
+              "type": "number"
+            }
+          },
+          "$id": "with-reference"
+        },
+        "path": "with-reference.json"
+      }
+    },
+    "version": "0.0.0",
+    "filename": "/sample/src/with-reference.js",
+    "parsedSchemas": {
+      "response": {
+        "params": {
+          "rootId": "with-reference"
+        },
+        "type": "x-object",
+        "dataType": "object",
+        "data": {
+          "$id": "with-reference"
+        },
+        "constraints": {},
+        "definitions": {
+          "other-field": {
+            "params": {
+              "rootId": "with-reference",
+              "isDefinition": true,
+              "isRequired": false,
+              "isCondition": true
+            },
+            "type": "x-node",
+            "dataType": "number",
+            "data": {},
+            "constraints": {},
+            "path": "/definitions/other-field",
+            "parentPath": "",
+            "depth": 1
+          }
+        },
+        "path": "",
+        "parentPath": "",
+        "depth": 0,
+        "haveAdditionalProperties": true,
+        "properties": {
+          "myfield": {
+            "params": {
+              "rootId": "with-reference",
+              "isProperty": true,
+              "isRequired": false,
+              "isCondition": true
+            },
+            "type": "x-ref",
+            "dataType": "reference",
+            "data": {
+              "description": "sample string definition"
+            },
+            "constraints": {},
+            "path": "/properties/myfield",
+            "parentPath": "",
+            "depth": 1,
+            "ref": {
+              "isLocal": false,
+              "base": "/sample/schemas",
+              "path": "common.json",
+              "hash": "#/definitions/field",
+              "full": "common.json#/definitions/field",
+              "originalRef": "common#/definitions/field",
+              "id": "common"
+            },
+            "refData": {
+              "params": {
+                "rootId": "with-reference",
+                "isProperty": true,
+                "isRequired": false,
+                "isCondition": true
+              },
+              "type": "x-node",
+              "dataType": "string",
+              "data": {
+                "description": "sample string definition"
+              },
+              "constraints": {},
+              "path": "",
+              "parentPath": "/properties/myfield",
+              "depth": 2
+            }
+          },
+          "secondField": {
+            "params": {
+              "rootId": "with-reference",
+              "isProperty": true,
+              "isRequired": false,
+              "isCondition": true
+            },
+            "type": "x-ref",
+            "dataType": "reference",
+            "data": {},
+            "constraints": {},
+            "path": "/properties/secondField",
+            "parentPath": "",
+            "depth": 1,
+            "ref": {
+              "isLocal": false,
+              "base": "/sample/schemas",
+              "path": "request.json",
+              "hash": "#",
+              "full": "request.json#",
+              "originalRef": "request#",
+              "id": "request"
+            },
+            "refData": {
+              "params": {
+                "rootId": "with-reference",
+                "isProperty": true,
+                "isRequired": false,
+                "isCondition": true
+              },
+              "type": "x-object",
+              "dataType": "object",
+              "data": {},
+              "constraints": {},
+              "path": "",
+              "parentPath": "/properties/secondField",
+              "depth": 2,
+              "haveAdditionalProperties": false,
+              "properties": {
+                "prop": {
+                  "params": {
+                    "rootId": "with-reference",
+                    "isProperty": true,
+                    "isRequired": false,
+                    "isCondition": true
+                  },
+                  "type": "x-node",
+                  "dataType": "string",
+                  "data": {},
+                  "constraints": {},
+                  "path": "/properties/prop",
+                  "parentPath": "",
+                  "depth": 3
+                }
+              }
+            }
+          },
+          "otherField": {
+            "params": {
+              "rootId": "with-reference",
+              "isProperty": true,
+              "isRequired": false,
+              "isCondition": true
+            },
+            "type": "x-ref",
+            "dataType": "reference",
+            "data": {},
+            "constraints": {},
+            "path": "/properties/otherField",
+            "parentPath": "",
+            "depth": 1,
+            "ref": {
+              "isLocal": true,
+              "hash": "#/definitions/other-field",
+              "originalRef": "#/definitions/other-field",
+              "id": "with-reference"
+            },
+            "refData": {
+              "params": {
+                "rootId": "with-reference",
+                "isProperty": true,
+                "isRequired": false,
+                "isCondition": true
+              },
+              "type": "x-node",
+              "dataType": "number",
+              "data": {},
+              "constraints": {},
+              "path": "",
+              "parentPath": "/properties/otherField",
+              "depth": 2
+            }
+          }
+        }
+      }
+    },
+    "resolvedSchemas": {
+      "response": {
+        "type": "object",
+        "properties": {
+          "myfield": {
+            "$ref": "common#/definitions/field",
+            "$xRef": {
+              "isLocal": false,
+              "base": "/sample/schemas",
+              "path": "common.json",
+              "hash": "#/definitions/field",
+              "full": "common.json#/definitions/field",
+              "originalRef": "common#/definitions/field",
+              "id": "common"
+            },
+            "type": "string",
+            "description": "sample string definition"
+          },
+          "secondField": {
+            "$ref": "request#",
+            "$xRef": {
+              "isLocal": false,
+              "base": "/sample/schemas",
+              "path": "request.json",
+              "hash": "#",
+              "full": "request.json#",
+              "originalRef": "request#",
+              "id": "request"
+            },
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "prop": {
+                "type": "string"
+              }
+            }
+          },
+          "otherField": {
+            "$ref": "#/definitions/other-field",
+            "$xRef": {
+              "isLocal": true,
+              "hash": "#/definitions/other-field",
+              "originalRef": "#/definitions/other-field",
+              "id": "with-reference"
+            },
+            "type": "number"
+          }
+        },
+        "definitions": {
+          "other-field": {
+            "type": "number"
+          }
+        },
+        "$id": "with-reference"
+      }
+    },
+    "group": "withReference",
+    "groupTitle": "/sample/src/with-reference.js",
+    "name": "GetApiSomeWithReference"
+  },
+  {
+    "type": "post",
+    "url": "/api/request",
+    "title": "",
+    "description": "<p>post api schema with reference</p>",
+    "schemas": {
+      "request": {
+        "schema": {
+          "schema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "prop": {
+                "type": "string"
+              }
+            },
+            "$id": "request"
+          },
+          "path": "request.json",
+          "base": "/sample/schemas",
+          "resolved": true
+        },
+        "resolved": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "prop": {
+              "type": "string"
+            }
+          },
+          "$id": "request"
+        },
+        "path": "request.json"
+      }
+    },
+    "version": "0.0.0",
+    "filename": "/sample/src/with-reference.js",
+    "parsedSchemas": {
+      "request": {
+        "params": {
+          "rootId": "request"
+        },
+        "type": "x-object",
+        "dataType": "object",
+        "data": {
+          "$id": "request"
+        },
+        "constraints": {},
+        "path": "",
+        "parentPath": "",
+        "depth": 0,
+        "haveAdditionalProperties": false,
+        "properties": {
+          "prop": {
+            "params": {
+              "rootId": "request",
+              "isProperty": true,
+              "isRequired": false,
+              "isCondition": true
+            },
+            "type": "x-node",
+            "dataType": "string",
+            "data": {},
+            "constraints": {},
+            "path": "/properties/prop",
+            "parentPath": "",
+            "depth": 1
+          }
+        }
+      }
+    },
+    "resolvedSchemas": {
+      "request": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prop": {
+            "type": "string"
+          }
+        },
+        "$id": "request"
+      }
+    },
+    "group": "withReference",
+    "groupTitle": "/sample/src/with-reference.js",
+    "name": "PostApiRequest"
+  },
+  {
+    "type": "SCHEMA",
+    "url": "common",
+    "title": "common",
+    "name": "common",
+    "group": "zSchemaDefinitions",
+    "groupTitle": "Definitions",
+    "filename": "common.json",
+    "parsedSchema": {
+      "params": {
+        "rootId": "common"
+      },
+      "type": "x-node",
+      "data": {
+        "$id": "common"
+      },
+      "constraints": {},
+      "definitions": {
+        "field": {
+          "params": {
+            "rootId": "common",
+            "isDefinition": true,
+            "isRequired": false,
+            "isCondition": true
+          },
+          "type": "x-node",
+          "dataType": "string",
+          "data": {
+            "description": "sample string definition"
+          },
+          "constraints": {},
+          "path": "/definitions/field",
+          "parentPath": "",
+          "depth": 1
+        }
+      },
+      "path": "",
+      "parentPath": "",
+      "depth": 0
+    },
+    "resolvedSchema": {
+      "schema": {
+        "$id": "common",
+        "definitions": {
+          "field": {
+            "type": "string",
+            "description": "sample string definition"
+          }
+        }
+      },
+      "path": "common.json",
+      "base": "/sample/schemas",
+      "resolved": true
+    }
+  }
+]

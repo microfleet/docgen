@@ -1,0 +1,17 @@
+{
+  "name": "@microfleet/apidoc-plugin-json-schema",
+  "version": "0.0.0",
+  "description": "",
+  "schemas": {
+    "path": "/sample/schemas"
+  },
+  "sampleUrl": false,
+  "defaultVersion": "0.0.0",
+  "apidoc": "0.3.0",
+  "generator": {
+    "name": "apidoc",
+    "time": "2020-08-28T13:43:53.387Z",
+    "url": "https://apidocjs.com",
+    "version": "0.25.0"
+  }
+}
