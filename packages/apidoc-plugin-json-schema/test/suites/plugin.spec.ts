@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { createDoc } from 'apidoc'
+import { createDoc as apiDocCreateDoc } from 'apidoc'
 import { promises as fs } from 'fs'
 import * as assert from 'assert'
 import * as winston from 'winston'
@@ -27,7 +27,7 @@ describe('apidoc-plugin', () => {
   })
 
   afterEach(async () => {
-    fs.rmdir(dest, { recursive: true })
+    await fs.rmdir(dest, { recursive: true })
   })
 
   beforeEach('replace winston transports',() => {
@@ -56,18 +56,19 @@ describe('apidoc-plugin', () => {
     const parsed = SchemaNode.parse(resolved)
     return { resolved, parsed }
   }
-
+  const createDoc = (params: Record<string, any>) => {
+    return apiDocCreateDoc({
+      src, dest, config: fixturePath,
+      ...params
+    })
+  }
   const stringify = (obj: any) => JSON.stringify(obj)
   const check = (result: any, expected: any) => assert.deepStrictEqual(stringify(result), stringify(expected))
 
   it('able to process apidoc blocks', () => {
     const requestSchema = readAndParse('request')
     const responseSchema = readAndParse('response')
-    const doc = createDoc({
-      src, dest,
-      config: fixturePath,
-      includeFilters: ['simple.js$'],
-    })
+    const doc = createDoc({ includeFilters: ['simple.js$'] })
 
     assert(typeof doc !== 'boolean')
 
@@ -85,12 +86,7 @@ describe('apidoc-plugin', () => {
   })
 
   it('missing schema', () => {
-    const doc = createDoc({
-      src, dest,
-      config: fixturePath,
-      includeFilters: ['missing-schema.js$'],
-    })
-
+    const doc = createDoc({ includeFilters: ['missing-schema.js$'] })
     assert(typeof doc === 'boolean', 'should not generate docs')
 
     const { logs } = loggerOutput
@@ -99,12 +95,7 @@ describe('apidoc-plugin', () => {
   })
 
   it('tag does not match regexp', () => {
-    const doc = createDoc({
-      src, dest,
-      config: fixturePath,
-      includeFilters: ['incorrect-tag.js$'],
-    })
-
+    const doc = createDoc({ includeFilters: ['incorrect-tag.js$'] })
     assert(typeof doc === 'boolean', 'should not generate docs')
 
     const { logs } = loggerOutput
@@ -113,12 +104,7 @@ describe('apidoc-plugin', () => {
   })
 
   it('schema group other than {Request|Response}', () => {
-    const doc = createDoc({
-      src, dest,
-      config: fixturePath,
-      includeFilters: ['incorrect-schema-group.js$'],
-    })
-
+    const doc = createDoc({ includeFilters: ['incorrect-schema-group.js$'] })
     assert(typeof doc === 'boolean', 'should not generate docs')
 
     const { logs } = loggerOutput
@@ -127,12 +113,7 @@ describe('apidoc-plugin', () => {
   })
 
   it('panic on parse error', () => {
-    const doc = createDoc({
-      src, dest,
-      config: fixturePath,
-      includeFilters: ['broken-schema.js$'],
-    })
-
+    const doc = createDoc({ includeFilters: ['broken-schema.js$'] })
     assert(typeof doc === 'boolean', 'should not generate docs')
 
     const { logs } = loggerOutput
@@ -141,12 +122,7 @@ describe('apidoc-plugin', () => {
   })
 
   it('panic on empty content', () => {
-    const doc = createDoc({
-      src, dest,
-      config: fixturePath,
-      includeFilters: ['empty.js$'],
-    })
-
+    const doc = createDoc({ includeFilters: ['empty.js$'] })
     assert(typeof doc === 'boolean', 'should not generate docs')
 
     const { logs } = loggerOutput
@@ -155,12 +131,7 @@ describe('apidoc-plugin', () => {
   })
 
   it('includes referenced schema', () => {
-    const doc = createDoc({
-      src, dest,
-      config: fixturePath,
-      includeFilters: ['with-reference.js$'],
-    })
-
+    const doc = createDoc({ includeFilters: ['with-reference.js$'] })
     assert(typeof doc !== 'boolean', 'should generate docs')
 
     const data = JSON.parse((doc as Record<string, any>).data)
