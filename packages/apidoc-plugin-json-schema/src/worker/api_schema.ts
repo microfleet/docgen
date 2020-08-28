@@ -26,15 +26,13 @@ function findRefsDeep(app: Application, schema: SchemaNode, preparedSchemas: Pre
         const schema = Object.values(app.mft.refParser.schemas).find(
           (schema) => schema.path === reference.ref.path
         )
-        if (!schema) throw new Error(`no reference schema '${reference.ref.originalRef}'`, )
-
         const schemaId = schema?.schema.$id
 
         // process referenced schema
         if (!preparedSchemas.referencedSchemas[schemaId]) {
-          const resolved = app.mft.refParser.resolveSchema(schema?.schema)
+          const resolved = app.mft.refParser.resolveSchema(schema!.schema)
           const parsed = SchemaNode.parse(resolved)
-          preparedSchemas.referencedSchemas[schemaId] = { parsed, schema }
+          preparedSchemas.referencedSchemas[schemaId] = { parsed, schema: schema! }
         }
 
         // go deep
@@ -92,14 +90,11 @@ function prepareSchemas(this: Application, parsedFiles: any[], _: string[], __: 
  */
 function createReferencedSchemaBlocks(parsedFiles: any[], filenames: string[], preProcessed: PreparedSchemas, _: any) {
   const { referencedSchemas, seenSchemas } = preProcessed
-  if (!referencedSchemas) return
 
   Object.values(referencedSchemas)
     .forEach(
       ({schema, parsed}) => {
-        if (seenSchemas.has(parsed.data.$id)) {
-          return
-        }
+        if (seenSchemas.has(parsed.data.$id)) return
 
         const schemaObj = {
           type: 'SCHEMA',

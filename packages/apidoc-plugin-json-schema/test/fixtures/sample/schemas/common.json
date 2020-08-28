@@ -1,0 +1,9 @@
+{
+  "$id": "common",
+  "definitions": {
+    "field": {
+      "type": "string",
+      "description": "sample string definition"
+    }
+  }
+}

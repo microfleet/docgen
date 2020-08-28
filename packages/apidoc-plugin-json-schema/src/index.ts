@@ -7,7 +7,6 @@ import { refSchemaWorker } from './worker/api_schema'
 module.exports = {
 	init: function(app: Application) {
 		const defaults = {
-			pwd: process.cwd(),
 			path: 'schemas/',
     }
 

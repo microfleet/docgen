@@ -19,6 +19,7 @@ declare module 'apidoc' {
 
   interface Application {
     packageInfos: any
+    log: any,
     parsers: {
       [key: string]: Parser
     }

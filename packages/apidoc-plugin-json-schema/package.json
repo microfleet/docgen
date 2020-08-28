@@ -8,15 +8,20 @@
     "prepublishOnly": "rimraf ./lib; yarn compile",
     "compile": "tsc -b tsconfig.build.json",
     "pretest": "yarn compile",
-    "test": "yarn lint && cross-env NODE_ENV=test nyc mocha ./test/**.spec.ts",
+    "test": "yarn lint && yarn cross-env NODE_ENV=test nyc mocha ./test/**/*.spec.ts",
     "lint": "eslint --ext .ts,.js ./src",
     "semantic-release": "semantic-release"
   },
   "dependencies": {
+    "common-errors": "^1.2.0",
     "fast-glob": "^3.2.4"
   },
   "devDependencies": {
-    "@types/apidoc": "^0.22.2"
+    "@types/apidoc": "^0.22.2",
+    "@types/common-errors": "^1.0.1",
+    "@types/sinon": "^9.0.5",
+    "apidoc": "^0.25.0",
+    "sinon": "^9.0.3"
   },
   "husky": {
     "hooks": {
