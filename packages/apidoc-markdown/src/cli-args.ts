@@ -10,7 +10,7 @@ import { Config } from './types'
 const parentProject = readPkg.sync()
 assert(parentProject && parentProject.version, 'Must contain package.json in the current dir')
 
-const configPath = findUp.sync(['.apidoc-md.rc', '.apidoc-md.js', '.apidoc-md.json'])
+const configPath = findUp.sync(['.mdocrc', '.mdocrc.js', '.mdocrc.json'])
 
 const config = configPath
   ? configPath.endsWith('.js')
@@ -21,11 +21,11 @@ const config = configPath
 const cli = yargs
   .usage('Generate Markdown documentation from apiDoc data.')
   .usage(
-    'Usage: apidoc-markdown -p <path> -o <output_file> [-t <template_path>] [--multi] [--createPath] [--prepend <file_path>]'
+    'Usage: mdoc-markdown -p <path> -o <output_file> [-t <template_path>] [--multi] [--createPath] [--prepend <file_path>]'
   )
-  .example('apidoc-markdown -p doc/ -o doc.md', 'Generate from `doc/` apiDoc output to `./doc.md`')
+  .example('mdoc-markdown -p doc/ -o doc.md', 'Generate from `doc/` apiDoc output to `./doc.md`')
   .example(
-    'apidoc-markdown -p doc -o multi --multi --createPath',
+    'mdoc-markdown -p doc -o multi --multi --createPath',
     'Generate from `doc/` apiDoc output to `./multi/<group>.md`'
   )
   .option('apiDocPath', {
