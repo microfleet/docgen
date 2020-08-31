@@ -1,0 +1,19 @@
+{
+  "node": "12.18.1",
+  "auto_compose": true,
+  "parallel": 1,
+  "services": [],
+  "tests": "test/suites/**/*.?s",
+  "arbitrary_exec": "yarn coverage:clean",
+  "post_exec": "yarn coverage:report",
+  "nycReport": false,
+  "nycCoverage": true,
+  "extras": {
+    "tester": {
+      "working_dir": "/src/packages/schema-tools",
+      "volumes": [
+        "${PWD}/../../:/src:cached"
+      ]
+    }
+  }
+}

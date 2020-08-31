@@ -1,0 +1,48 @@
+{
+  "name": "@microfleet/mdoc",
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "bin": {
+    "mdoc-markdown": "bin/index.js"
+  },
+  "scripts": {
+    "prepublishOnly": "rimraf ./lib; yarn compile",
+    "compile": "tsc -b tsconfig.build.json",
+    "pretest": "yarn compile",
+    "test": "yarn lint && yarn mdep test run",
+    "lint": "eslint --ext .ts,.js ./src",
+    "semantic-release": "semantic-release",
+    "coverage:clean": "rimraf .nyc_output",
+    "coverage:report": "yarn nyc report --reporter=lcov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microfleet/docgen.git",
+    "directory": "packages/mdoc-markdown"
+  },
+  "author": "Vitaly Aminev <v@makeomatic.ca>",
+  "bugs": {
+    "url": "https://github.com/microfleet/docgen/issues"
+  },
+  "homepage": "https://github.com/microfleet/docgen/#readme",
+  "dependencies": {
+    "@microfleet/schema-tools": "^0.0.0",
+    "@microfleet/schema2md": "^0.0.0",
+    "apidoc-markdown": "^5.1.6",
+    "find-up": "^5.0.0",
+    "log-update": "^4.0.0",
+    "read-pkg": "^5.2.0",
+    "yargs": "^15.4.1"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.0.4",
+    "@types/yargs": "^15.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "prepare-commit-msg": "./node_modules/@makeomatic/deploy/git-hooks/prepare-commit-msg $HUSKY_GIT_PARAMS"
+    }
+  }
+}

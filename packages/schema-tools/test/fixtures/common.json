@@ -1,0 +1,12 @@
+{
+  "definitions": {
+    "mydef": {
+      "$id": "mydefid",
+      "type": "string",
+      "title": "mydeftitle"
+    },
+    "internalRef": {
+      "$ref": "#/definitions/mydef"
+    }
+  }
+}

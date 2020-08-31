@@ -1,0 +1,42 @@
+{
+  "name": "@microfleet/apidoc-plugin-json-schema",
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "bin": "bin/index.js",
+  "scripts": {
+    "prepublishOnly": "rimraf ./lib; yarn compile",
+    "compile": "tsc -b tsconfig.build.json",
+    "pretest": "yarn compile",
+    "test": "yarn lint && yarn mdep test run",
+    "lint": "eslint --ext .ts,.js ./src",
+    "semantic-release": "semantic-release",
+    "coverage:clean": "rimraf .nyc_output",
+    "coverage:report": "yarn nyc report --reporter=lcov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microfleet/docgen.git",
+    "directory": "packages/apidoc-plugin-json-schema"
+  },
+  "author": "Vitaly Aminev <v@makeomatic.ca>",
+  "bugs": {
+    "url": "https://github.com/microfleet/docgen/issues"
+  },
+  "homepage": "https://github.com/microfleet/docgen#readme",
+  "dependencies": {
+    "@microfleet/schema-tools": "^0.0.0"
+  },
+  "devDependencies": {
+    "@types/apidoc": "^0.22.2",
+    "@types/sinon": "^9.0.5",
+    "apidoc": "^0.25.0",
+    "sinon": "^9.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "prepare-commit-msg": "./node_modules/@makeomatic/deploy/git-hooks/prepare-commit-msg $HUSKY_GIT_PARAMS"
+    }
+  }
+}

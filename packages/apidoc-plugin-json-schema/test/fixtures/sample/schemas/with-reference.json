@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "myfield": {
+      "$ref": "common#/definitions/field"
+    },
+    "secondField": {
+      "$ref": "request#"
+    },
+    "otherField": {
+      "$ref": "#/definitions/other-field"
+    }
+  },
+  "definitions": {
+    "other-field": {
+      "type": "number"
+    }
+  }
+}

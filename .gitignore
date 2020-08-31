@@ -39,3 +39,6 @@ node_modules
 yarn-error.log
 packages/*/lib
 
+.nyc_output
+.DS_Store
+

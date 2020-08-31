@@ -1,0 +1,6 @@
+{
+  "type": "object",
+  "properties": {
+    "$ref": "broken-ref#/some"
+  }
+}

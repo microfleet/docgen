@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "properties": {
+    "simpleNumber": {
+      "type": "number"
+    },
+    "referencedType": {
+      "$ref": "common#/definitions/mydef"
+    },
+    "referencedTypeAsPath": {
+      "$ref": "./common.json#/definitions/mydef"
+    },
+    "referencedTypeAsPathThroughtSub": {
+      "$ref": "../fixtures/common.json#/definitions/mydef"
+    },
+    "referenceLocal": {
+      "$ref": "#/definitions/someObject"
+    },
+    "arrayWitDifferentItems": {
+      "anyOf": [
+        { "type": "string", "const": "constValue" },
+        { "$ref": "#/definitions/someObject" }
+      ]
+    }
+  },
+  "definitions": {
+    "someObject": {
+      "$id": "someObject",
+      "type": "object",
+      "additionalProperties": false,
+      "description": "object description",
+      "properties": {
+        "bool": {
+          "type": "boolean"
+        },
+        "int": {
+          "type": "int"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "exclude": [
+    "src/**/*.spec.?s",
+    "test"
+  ],
+  "cache": true,
+  "reporter": [
+    "text-summary",
+    "lcov",
+    "json"
+  ],
+  "clean": false
+}
