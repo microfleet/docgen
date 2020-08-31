@@ -40,7 +40,6 @@ export async function generateFs(args: Config): Promise<void> {
   const schemaIndex = generateSchemaIndex(apiDocApiData)
 
   const renderer = new Renderer({
-    multi,
     linkTo(schema: SchemaRef): string {
       const { id, hash } = schema.ref
       const base = [...schemaIndex.get(id)!.values()][0] || ''

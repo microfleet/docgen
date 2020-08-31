@@ -13,10 +13,8 @@ export type RenderedNode = (DataObject|string)
 type RenderFn = (renderer: Renderer, node: any) => RenderedNode[]
 
 type Config = {
-  multi: boolean
   linkTo?: (ref: SchemaRef) => string
   linkFrom?: (node: SchemaNode) => string
-  [key: string]: any
 }
 
 type RendererMap = Map<typeof TREE_NODE_TYPES[number], RenderFn>
@@ -26,12 +24,7 @@ export class Renderer {
   private renderers: RendererMap = new Map()
 
   constructor(config: Partial<Config>) {
-    this.config = {
-      multi: false,
-      linkBase: '',
-      ...config
-    }
-
+    this.config = config
     this.renderers.set('x-ref', renderRef)
     this.renderers.set('x-object', renderObject)
     this.renderers.set('x-array', renderArray)
@@ -41,7 +34,7 @@ export class Renderer {
 
   }
 
-  public render(node: SchemaNode): (DataObject|string)[] {
+  public render(node: SchemaNode): RenderedNode[] {
     const renderer = this.renderers.get(node.type)
     if (renderer) return renderer(this, node)
     throw new Error(`rederer for '${node.type}' not registered`)
