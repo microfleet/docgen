@@ -3,6 +3,8 @@
   "extends": "../../tsconfig.json",
   "references": [{
     "path": "../schema2md/tsconfig.build.json"
+  },{
+    "path": "../schema-tools/tsconfig.build.json"
   }],
   "include": [
     "./src/*.ts",
