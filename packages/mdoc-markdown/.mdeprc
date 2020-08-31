@@ -10,7 +10,7 @@
   "nycCoverage": true,
   "extras": {
     "tester": {
-      "working_dir": "/src/packages/apidoc-markdown",
+      "working_dir": "/src/packages/mdoc-markdown",
       "volumes": [
         "${PWD}/../../:/src:cached"
       ]
