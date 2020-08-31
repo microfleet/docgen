@@ -8,5 +8,9 @@
     "path": "./packages/schema-tools/tsconfig.build.json"
   }, {
     "path": "./packages/schema2md/tsconfig.build.json"
+  },{
+    "path": "./packages/apidoc-plugin-json-schema/tsconfig.build.json"
+  }, {
+    "path": "./packages/mdoc-markdown/tsconfig.build.json"
   }]
 }
