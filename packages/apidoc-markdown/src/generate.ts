@@ -54,7 +54,7 @@ export async function generateFs(args: Config): Promise<void> {
       md: {
         renderer,
         render: (_: string, obj: any) => {
-          const rendered = renderer.render(obj, 0)
+          const rendered = renderer.render(obj)
           return json2md(rendered)
         },
       },
