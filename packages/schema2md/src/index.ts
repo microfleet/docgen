@@ -8,7 +8,9 @@ import type { DataObject } from 'json2md'
 
 import { TREE_NODE_TYPES, SchemaNode, SchemaRef } from '@microfleet/schema-tools'
 
-type RenderFn = (renderer: Renderer, node: any, level: number) => (DataObject|string)[]
+export type RenderedNode = (DataObject|string)
+
+type RenderFn = (renderer: Renderer, node: any) => RenderedNode[]
 
 type Config = {
   multi: boolean
@@ -39,9 +41,9 @@ export class Renderer {
 
   }
 
-  public render(node: SchemaNode, level: number): (DataObject|string)[] {
+  public render(node: SchemaNode): (DataObject|string)[] {
     const renderer = this.renderers.get(node.type)
-    if (renderer) return renderer(this, node, level)
+    if (renderer) return renderer(this, node)
     throw new Error(`rederer for '${node.type}' not registered`)
   }
 

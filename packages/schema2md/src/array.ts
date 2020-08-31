@@ -1,13 +1,12 @@
-import { DataObject } from 'json2md'
 import { SchemaArray } from '@microfleet/schema-tools'
 
 import { getGenericInfo } from './util'
-import type { Renderer } from './index'
+import type { Renderer, RenderedNode } from './index'
 
-export function renderArray(renderer: Renderer, node: SchemaArray, level: number): (string | DataObject)[] {
+export function renderArray(renderer: Renderer, node: SchemaArray): RenderedNode[] {
   return [
-    ...getGenericInfo(renderer, node, level),
+    ...getGenericInfo(renderer, node),
     'Each item should be:',
-    ...renderer.render(node.items, level + 1)
+    ...renderer.render(node.items)
   ]
 }

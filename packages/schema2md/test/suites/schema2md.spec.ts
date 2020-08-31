@@ -50,7 +50,7 @@ describe('Schema2md', () => {
       }
     ]
 
-    const rendered = renderer.render(schema, 0)
+    const rendered = renderer.render(schema)
     assert.deepStrictEqual(rendered, renderedSchema)
   })
 
@@ -102,7 +102,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -181,7 +181,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
   })
@@ -206,7 +206,7 @@ describe('Schema2md', () => {
         '`{string}`<br>', 'Constraints: `maxLength`: `256`<br>'
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -242,7 +242,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
   })
@@ -285,7 +285,7 @@ describe('Schema2md', () => {
         '[(common#/definitions/foo)](#common--definitions/foo)'
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -306,7 +306,7 @@ describe('Schema2md', () => {
         '[resolved title(common#/definitions/data)](#--definitions/data)'
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -331,7 +331,7 @@ describe('Schema2md', () => {
         { p: 'resolved description' }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -357,7 +357,7 @@ describe('Schema2md', () => {
         '[resolved title(common#/definitions/data)](customlinkto)'
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
   })
@@ -422,7 +422,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -468,7 +468,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -526,7 +526,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -589,7 +589,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -656,7 +656,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
 
@@ -769,7 +769,7 @@ describe('Schema2md', () => {
         }
       ]
 
-      const rendered = renderer.render(schema, 0)
+      const rendered = renderer.render(schema)
       assert.deepStrictEqual(rendered, renderedSchema)
     })
   })

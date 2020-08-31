@@ -1,7 +1,7 @@
 import { DataObject } from 'json2md'
 import { SchemaNode, SchemaRef, SchemaObject } from '@microfleet/schema-tools'
 
-import type { Renderer } from './index'
+import type { Renderer, RenderedNode } from './index'
 
 export function isProperty(node: SchemaNode): boolean {
   const { params } = node
@@ -20,7 +20,7 @@ export function linkFrom(r: Renderer, node: SchemaNode): string {
   return `${node.params.rootId || ''}#${node.path.toString()}`.replace(/#/g, '--')
 }
 
-export function renderDefaultsOrExample(type: string, title: string, data: unknown): (string|DataObject)[] {
+export function renderDefaultsOrExample(type: string, title: string, data: unknown): RenderedNode[] {
   if (type === 'object') {
     return [
       `${title}:`,
@@ -35,7 +35,7 @@ export function renderDefaultsOrExample(type: string, title: string, data: unkno
   return [`${title}: \`${JSON.stringify(data, null, 2)}\``]
 }
 
-export function getGenericInfo(renderer: Renderer, node: SchemaNode, level: number): (string|DataObject)[] {
+export function getGenericInfo(renderer: Renderer, node: SchemaNode): RenderedNode[] {
   const result: (DataObject|string)[] = []
 
   const { description } = node.data
@@ -67,34 +67,33 @@ export function getGenericInfo(renderer: Renderer, node: SchemaNode, level: numb
   }
 
   if (node.ifCondition) {
-    result.push(renderer.render(node.ifCondition, level + 1))
+    result.push(renderer.render(node.ifCondition))
   }
 
   return result
 }
 
-export function renderProps(renderer: Renderer, props: Record<string, SchemaNode> | undefined, level: number): DataObject {
+export function renderProps(renderer: Renderer, props: Record<string, SchemaNode> | undefined): RenderedNode {
   const ul = Object.entries(props ?? {}).map(( [name , prop] ) => {
     return [
       `**${name.replace(/\|/gi, '&#123;')}**`,
-      ...renderer.render(prop, level + 1)
+      ...renderer.render(prop)
     ]
   })
-  // @todo consistent types
+
   return { ul: ul as unknown as string[] } // dirty hack
 }
 
-export function renderDefinitions(renderer: Renderer, node: SchemaNode, level: number): DataObject {
+export function renderDefinitions(renderer: Renderer, node: SchemaNode): RenderedNode {
   const definitions = node.definitions ?? {}
   const ul = Object.entries(definitions).map(( [,prop] ) =>
     [
       `**${node.data.$id || ''}#${prop.path.toString()}**`,
-      ...renderer.render(prop, level + 2),
+      ...renderer.render(prop),
       '<br>'
     ]
   )
   return {
-    // @todo consistent types
     ul: ul as unknown as string[] // dirty hack
   }
 }

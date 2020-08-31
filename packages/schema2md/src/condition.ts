@@ -1,15 +1,14 @@
-import { DataObject } from "json2md"
 import { SchemaConditionalOf, SchemaConditionalIf } from "@microfleet/schema-tools"
 
-import type { Renderer } from './index'
+import type { Renderer, RenderedNode } from './index'
 
-export function renderCondOf(renderer: Renderer, node: SchemaConditionalOf, level: number): (DataObject| string)[] {
-  const result: (DataObject | string)[] = []
+export function renderCondOf(renderer: Renderer, node: SchemaConditionalOf): RenderedNode[] {
+  const result: RenderedNode[] = []
 
   result.push(`*Could be ${node.condition}:*`)
   result.push(
     {
-      ul: node.possibles.map((condition) => renderer.render(condition, level + 1)) as unknown as string[]
+      ul: node.possibles.map((condition) => renderer.render(condition) as any)
     }
   )
 
@@ -17,21 +16,21 @@ export function renderCondOf(renderer: Renderer, node: SchemaConditionalOf, leve
 }
 
 
-export function renderCondIf(renderer: Renderer, node: SchemaConditionalIf, level: number): DataObject[] {
-  const result: (DataObject | string)[] = []
+export function renderCondIf(renderer: Renderer, node: SchemaConditionalIf): RenderedNode[] {
+  const result: RenderedNode[] = []
   result.push([
     `*If:*`,
-    ...renderer.render(node.if, level + 1)
+    ...renderer.render(node.if)
   ])
 
   result.push([
     `*Then:*`,
-    ...renderer.render(node.then, level + 1)
+    ...renderer.render(node.then)
   ])
 
   if (node.else) result.push([
     `*Else:*`,
-    ...renderer.render(node.else, level + 1)
+    ...renderer.render(node.else)
   ])
 
   return [{ ul: result as string[] }]
