@@ -20,6 +20,21 @@ export function linkFrom(r: Renderer, node: SchemaNode): string {
   return `${node.params.rootId || ''}#${node.path.toString()}`.replace(/#/g, '--')
 }
 
+export function renderDefaultsOrExample(type: string, title: string, data: unknown): (string|DataObject)[] {
+  if (type === 'object') {
+    return [
+      `${title}:`,
+      {
+        code: {
+          language: 'json',
+          content: JSON.stringify(data, null, 2)
+        }
+      }
+    ]
+  }
+  return [`${title}: \`${JSON.stringify(data, null, 2)}\``]
+}
+
 export function getGenericInfo(renderer: Renderer, node: SchemaNode, level: number): (string|DataObject)[] {
   const result: (DataObject|string)[] = []
 
@@ -41,6 +56,10 @@ export function getGenericInfo(renderer: Renderer, node: SchemaNode, level: numb
   if (Object.keys(node.constraints).length > 0) {
     const asStrings = Object.entries(node.constraints).map(([key, value]) => `\`${key}\`: \`${JSON.stringify(value)}\``)
     result.push(`Constraints: ${asStrings.join(', ')}<br>`)
+  }
+
+  if (node.data.default) {
+    result.push(...renderDefaultsOrExample(node.dataType, 'Default', node.data.default))
   }
 
   if (description) {

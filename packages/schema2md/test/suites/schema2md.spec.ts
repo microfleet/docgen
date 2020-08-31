@@ -29,12 +29,14 @@ describe('Schema2md', () => {
           type: 'string',
           maxLength: 100,
         }
-      }
+      },
+      example: 'I\'m a string'
     })
 
     const renderedSchema = [
       '<a name="schemaId--"/>`{string}`<br>',
       { p: 'schemaDescription' },
+      'Example: `"I\'m a string"`',
       { p: '**Definitions**:' },
       {
         ul: [
@@ -94,7 +96,7 @@ describe('Schema2md', () => {
             ],
             [
               '<a name="--/allOf/1"/>`{boolean}`<br>',
-              'Constraints: `default`: `true`<br>'
+              'Default: `true`'
             ]
           ]
         }
@@ -370,6 +372,14 @@ describe('Schema2md', () => {
       properties: {
         first: { type: 'number', description: 'first property' },
         second: { type: 'number', description: 'second property' }
+      },
+      default: {
+        first: 42,
+        second: 777,
+      },
+      example: {
+        first: 24,
+        second: 666,
       }
     }
 
@@ -380,6 +390,13 @@ describe('Schema2md', () => {
         '<a name="schema.object--"/>`{object}`<br>',
         'Additional properties allowed: `true`<br>',
         'Constraints: `required`: `["first","second"]`<br>',
+        'Default:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 42,\n  "second": 777\n}'
+          }
+        },
         { p: 'descrition of the object' },
         'Properties:',
         {
@@ -395,6 +412,13 @@ describe('Schema2md', () => {
               { p: 'second property' }
             ]
           ]
+        },
+        'Example:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 24,\n  "second": 666\n}'
+          }
         }
       ]
 
@@ -412,6 +436,13 @@ describe('Schema2md', () => {
         '<a name="schema.object--"/>`{object}`<br>',
         'Additional properties allowed: `false`<br>',
         'Constraints: `required`: `["first","second"]`<br>',
+        'Default:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 42,\n  "second": 777\n}'
+          }
+        },
         { p: 'descrition of the object' },
         'Properties:',
         {
@@ -427,6 +458,13 @@ describe('Schema2md', () => {
               { p: 'second property' }
             ]
           ]
+        },
+        'Example:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 24,\n  "second": 666\n}'
+          }
         }
       ]
 
@@ -448,6 +486,13 @@ describe('Schema2md', () => {
         '<a name="schema.object--"/>`{object}`<br>',
         'Additional properties allowed: `true`<br>',
         'Constraints: `required`: `["first","second"]`<br>',
+        'Default:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 42,\n  "second": 777\n}'
+          }
+        },
         { p: 'descrition of the object' },
         'Properties:',
         {
@@ -468,8 +513,16 @@ describe('Schema2md', () => {
         {
           ul: [
             '<a name="schema.object--"/>`{string}`<br>',
-            'Constraints: `maxLength`: `256`, `default`: `"123"`<br>'
+            'Constraints: `maxLength`: `256`<br>',
+            'Default: `"123"`'
           ]
+        },
+        'Example:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 24,\n  "second": 666\n}'
+          }
         }
       ]
 
@@ -493,6 +546,13 @@ describe('Schema2md', () => {
         '<a name="schema.object--"/>`{object}`<br>',
         'Additional properties allowed: `true`<br>',
         'Constraints: `required`: `["first","second"]`<br>',
+        'Default:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 42,\n  "second": 777\n}'
+          }
+        },
         { p: 'descrition of the object' },
         'Properties:',
         {
@@ -515,9 +575,17 @@ describe('Schema2md', () => {
             [
               '**^foo.***',
               '<a name="schema.object--/patternProperties/^foo.*"/>`{string}`<br>',
-              'Constraints: `maxLength`: `256`, `default`: `"777"`<br>'
+              'Constraints: `maxLength`: `256`<br>',
+              'Default: `"777"`'
             ]
           ]
+        },
+        'Example:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 24,\n  "second": 666\n}'
+          }
         }
       ]
 
@@ -543,6 +611,13 @@ describe('Schema2md', () => {
         '<a name="schema.object--"/>`{object}`<br>',
         'Additional properties allowed: `true`<br>',
         'Constraints: `required`: `["first","second"]`<br>',
+        'Default:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 42,\n  "second": 777\n}'
+          }
+        },
         { p: 'descrition of the object' },
         'Properties:',
         {
@@ -559,13 +634,21 @@ describe('Schema2md', () => {
             ]
           ]
         },
+        'Example:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 24,\n  "second": 666\n}'
+          }
+        },
         '**Definitions**:',
         {
           ul: [
             [
               '**schema.object#/definitions/someDef**',
               '<a name="schema.object--/definitions/someDef"/>`{string}`<br>',
-              'Constraints: `maxLength`: `256`, `default`: `"777"`<br>',
+              'Constraints: `maxLength`: `256`<br>',
+              'Default: `"777"`',
               { p: 'someDef description' },
               '<br>'
             ]
@@ -604,6 +687,13 @@ describe('Schema2md', () => {
         '<a name="schema.object--"/>`{object}`<br>',
         'Additional properties allowed: `true`<br>',
         'Constraints: `required`: `["first","second"]`<br>',
+        'Default:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 42,\n  "second": 777\n}'
+          }
+        },
         { p: 'descrition of the object' },
         [
           {
@@ -669,6 +759,13 @@ describe('Schema2md', () => {
               { p: 'second property' }
             ]
           ]
+        },
+        'Example:',
+        {
+          code: {
+            language: 'json',
+            content: '{\n  "first": 24,\n  "second": 666\n}'
+          }
         }
       ]
 

@@ -1,7 +1,7 @@
 import { DataObject } from "json2md"
 import type { SchemaObject, SchemaNode } from "@microfleet/schema-tools"
 
-import { getGenericInfo, renderDefinitions, renderProps } from './util'
+import { getGenericInfo, renderDefinitions, renderProps, renderDefaultsOrExample } from './util'
 import type { Renderer } from './index'
 
 export function renderObject(renderer: Renderer, node: SchemaObject, level: number): DataObject[] | any {
@@ -24,6 +24,10 @@ export function renderObject(renderer: Renderer, node: SchemaObject, level: numb
   if (node.patternProperties) {
     result.push({p: '**Pattern properties**:'})
     result.push(renderProps(renderer, node.patternProperties, level + 1))
+  }
+
+  if (node.data.example) {
+    result.push(...renderDefaultsOrExample(node.dataType, 'Example', node.data.example))
   }
 
   if (node.definitions) {

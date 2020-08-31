@@ -32,11 +32,9 @@ function generateSchemaIndex(apiData: any): Map<string, Set<string>>{
 
 export async function generateFs(args: Config): Promise<void> {
   const { multi, prepend, output, createPath } = args
-  // eslint-disable-next-line no-console
-  console.debug(args)
+
   const apiDocApiData = await import(path.join(args.apiDocPath, 'api_data.json'))
   const apiDocProjectData = await import(path.join(args.apiDocPath, 'api_project.json'))
-
   const rawTemplate = await fs.readFile(args.template, { encoding: 'utf-8' })
 
   const schemaIndex = generateSchemaIndex(apiDocApiData)
