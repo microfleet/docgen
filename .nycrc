@@ -10,5 +10,5 @@
     "lcov",
     "json"
   ],
-  "clean": true
+  "clean": false
 }
