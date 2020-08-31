@@ -28,10 +28,10 @@
     "@microfleet/schema-tools": "^0.1.0"
   },
   "devDependencies": {
-    "@types/apidoc": "^0.22.2",
-    "@types/sinon": "^9.0.5",
-    "apidoc": "^0.25.0",
-    "sinon": "^9.0.3"
+    "@types/apidoc": "0.22.2",
+    "@types/sinon": "9.0.5",
+    "apidoc": "0.25.0",
+    "sinon": "9.0.3"
   },
   "husky": {
     "hooks": {
