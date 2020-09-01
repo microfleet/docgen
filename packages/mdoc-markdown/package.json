@@ -39,6 +39,11 @@
     "@types/ejs": "^3.0.4",
     "@types/yargs": "^15.0.5"
   },
+  "files": [
+    "lib",
+    "src",
+    "template"
+  ],
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",

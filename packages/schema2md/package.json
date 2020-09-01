@@ -34,6 +34,10 @@
   "devDependencies": {
     "@types/json2md": "^1.5.0"
   },
+  "files": [
+    "lib",
+    "src"
+  ],
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
