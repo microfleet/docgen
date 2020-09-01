@@ -4,7 +4,7 @@
   "main": "lib/index.js",
   "license": "MIT",
   "bin": {
-    "mdoc-markdown": "bin/index.js"
+    "mdoc-markdown": "lib/cli.js"
   },
   "scripts": {
     "prepublishOnly": "rimraf ./lib; yarn compile",
