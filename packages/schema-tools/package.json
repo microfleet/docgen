@@ -4,12 +4,10 @@
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
-    "prepublishOnly": "rimraf ./lib; yarn compile",
     "compile": "tsc -b tsconfig.build.json",
     "pretest": "yarn compile",
     "test": "yarn lint && yarn mdep test run",
     "lint": "eslint --ext .ts,.js ./src",
-    "semantic-release": "semantic-release",
     "coverage:clean": "rimraf .nyc_output",
     "coverage:report": "yarn nyc report --reporter=lcov"
   },
@@ -34,5 +32,9 @@
     "@types/common-errors": "^1.0.1",
     "@types/deasync": "^0.1.1",
     "@types/lodash": "^4.14.160"
-  }
+  },
+  "files": [
+    "lib",
+    "src"
+  ]
 }
