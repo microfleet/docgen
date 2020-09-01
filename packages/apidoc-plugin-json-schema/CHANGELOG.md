@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/microfleet/docgen/compare/@microfleet/apidoc-plugin-json-schema@0.1.0...@microfleet/apidoc-plugin-json-schema@0.1.1) (2020-09-01)
+
+
+### Bug Fixes
+
+* mdoc-markdown binary path ([#4](https://github.com/microfleet/docgen/issues/4)) ([cbbf501](https://github.com/microfleet/docgen/commit/cbbf5015ef732b6501f03cb4e8d097905530aecf))
+
+
+
+
+
 # 0.1.0 (2020-08-31)
 
 
