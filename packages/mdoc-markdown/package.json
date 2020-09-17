@@ -7,7 +7,6 @@
     "mdoc-markdown": "lib/cli.js"
   },
   "scripts": {
-    "prepublishOnly": "rimraf ./lib; yarn compile",
     "compile": "tsc -b tsconfig.build.json",
     "pretest": "yarn compile",
     "test": "yarn lint && yarn mdep test run",
