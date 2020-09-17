@@ -3,7 +3,7 @@
 The CLI tool that Generates documentation in Markdown from `apidoc` generated data.
 
 ## Install
-`yarn add @microfleet/mdoc-markdown`
+`yarn add @microfleet/mdoc`
 
 
 ## Usage
