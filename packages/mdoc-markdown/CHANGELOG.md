@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/microfleet/docgen/compare/@microfleet/mdoc@0.1.3...@microfleet/mdoc@0.1.4) (2020-09-17)
+
+
+### Bug Fixes
+
+* broken binary and package name ([#10](https://github.com/microfleet/docgen/issues/10)) ([cfdec1a](https://github.com/microfleet/docgen/commit/cfdec1aa641252fd0710c339ac49611e3b678e57))
+
+
+
+
+
 ## [0.1.3](https://github.com/microfleet/docgen/compare/@microfleet/mdoc@0.1.2...@microfleet/mdoc@0.1.3) (2020-09-17)
 
 **Note:** Version bump only for package @microfleet/mdoc
