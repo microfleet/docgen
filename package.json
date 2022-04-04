@@ -23,7 +23,7 @@
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "cross-env": "^7.0.2",
-    "eslint": "^7.9.0",
+    "eslint": "^8.0.0",
     "eslint-config-makeomatic": "^5.0.3",
     "lerna": "^3.22.1",
     "mocha": "^8.1.3",
