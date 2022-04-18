@@ -29,7 +29,7 @@
     "@types/apidoc": "^0.22.2",
     "@types/sinon": "^9.0.5",
     "apidoc": "^0.25.0",
-    "sinon": "^9.0.3"
+    "sinon": "^13.0.0"
   },
   "files": [
     "lib",
