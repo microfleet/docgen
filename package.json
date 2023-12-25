@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
-    "@makeomatic/deploy": "^10.3.0",
+    "@makeomatic/deploy": "^13.0.0",
     "@types/mocha": "^8.0.3",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
