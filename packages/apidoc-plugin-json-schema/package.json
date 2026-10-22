@@ -28,7 +28,7 @@
   "devDependencies": {
     "@types/apidoc": "^0.22.2",
     "@types/sinon": "^9.0.5",
-    "apidoc": "^0.25.0",
+    "apidoc": "^1.0.0",
     "sinon": "^9.0.3"
   },
   "files": [
